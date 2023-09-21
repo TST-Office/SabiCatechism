@@ -18,6 +18,7 @@ export const SIZES = {
     padding: 10,
     padding2: 12,
     padding3: 16,
+    radius10: 10,
 
     // font sizes
     largeTitle: 50,
@@ -34,6 +35,11 @@ export const SIZES = {
     // app dimensions
     width,
     height,
+    width75: "75%",
+    height320: 320,
+    height70: 70,
+    width70: 70 ,
+    width100: "100%"
 }
 
 export const FONTS = {
