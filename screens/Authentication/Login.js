@@ -5,6 +5,7 @@ import {
   Pressable,
   TextInput,
   TouchableOpacity,
+  Stylesheet
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,7 +15,7 @@ import Button from "../../components/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../slices/userSlice";
 import axios from "axios";
-import FormSuccess from "../../components/FormSuccess";
+import ErrorModal from "../../components/ErrorModal";
 
 const Login = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -27,25 +28,28 @@ const Login = ({ navigation }) => {
     // Other user-related data
   };
 
-  const [showSuccess, setShowSuccess] = useState(false); // Set this to false to initially show loading
-
-  // You can toggle the success message visibility with a button or any other event
-  const toggleSuccess = () => {
-    setShowSuccess(!showSuccess);
-  };
-
   dispatch(setUser(userData));
 
+  const [showError, setShowError] = useState(false);
+
+  // Function to show the error modal
+  const showErrorModal = () => {
+    setShowError(true);
+  };
+
+  // Function to hide the error modal
+  const hideErrorModal = () => {
+    setShowError(false);
+  };
+
   return (
-  
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-    <FormSuccess
-        props={{
-          successMessage: "Login Successful!", // Replace with your success message
-          close: toggleSuccess,
-          onPress: toggleSuccess,
-        }}
-      />
+     {showError && (
+        <ErrorModal
+          err="An error occurred!" // Replace with your error message
+          onPress={hideErrorModal}
+        />
+      )}
       <View style={{ flex: 1, marginHorizontal: 22 }}>
         <View style={{ marginVertical: 22 }}>
           <Text
@@ -95,7 +99,8 @@ const Login = ({ navigation }) => {
             <TextInput
               placeholder="Enter your email or username"
               placeholderTextColor={COLORS.black}
-              keyboardType="email-address"
+              keyboardType="email-address" 
+              
               style={{
                 width: "100%",
               }}
@@ -158,7 +163,7 @@ const Login = ({ navigation }) => {
             marginTop: 18,
             marginBottom: 4,
           }}
-          onPress={toggleSuccess}
+          onPress={showErrorModal}
         />
 
         <View
