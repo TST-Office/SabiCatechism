@@ -17,7 +17,7 @@ const ErrorModal = (props) => {
     <Overlay
       overlayStyle={styles.overlay}
       isVisible={true}
-      onBackdropPress={() => hideErrorOverlay(false)}
+      onBackdropPress={() => props.hideErrorOverlay(false)}
     >
       <View style={styles.errorView}>
         <Image source={images.checkedError} style={styles.errorIcon} />
@@ -28,11 +28,11 @@ const ErrorModal = (props) => {
       </View>
       <Button
         title="OK"
-        onPress={props.onPress}
+        onPress={() => props.hideErrorOverlay(false)}
         style={{
           marginTop: 22,
           width: "100%",
-          color: colors.black,
+          color: COLORS.black,
           backgroundColor: colors.error,
           borderColor: COLORS.black
         }}

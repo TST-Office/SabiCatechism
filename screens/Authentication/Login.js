@@ -34,7 +34,6 @@ const Login = ({ navigation }) => {
   const [displayModalSuccess, setDisplayModalSuccess] = useState(false);
   const [displayModalErr, setDisplayModalErr] = useState(false);
 
-  const [showError, setShowError] = useState(false);
 
   const passwordChange = (value) => {
     setPassword(value);
@@ -46,7 +45,7 @@ const Login = ({ navigation }) => {
   // Now try to log the user in
   const loginUser = () => {
     setIsLoading(true);
-    console.log(API_URL)
+    console.log(API_URL);
     axios
       .post(`${API_URL}/login`, {
         username: isUser,
@@ -54,20 +53,37 @@ const Login = ({ navigation }) => {
         devicename: Device.modelName,
       })
       .then((response) => {
-        console.log("request sent", response.data, isUser)
+        console.log("request sent", response.data, isUser);
         if (response.data.status === true) {
-          console.log("Login success response: ", response.data.username );
+          setIsLoading(false)
+          setSuccessMessage("Login successful")
+          setPassword("")
+          setIsUser("")
+          console.log("Login success response: ", response.data.username);
+
+          // set user details fetched from the api
+          const userData = {
+            id: response.data.username.id,
+            userDetails: response.data,
+            user: response.data.username
+          }
+          // persist the user details
+          dispatch(setUser(userData))
+
         }
         if (response.data.status === false) {
           setIsLoading(false);
-          // setErrMessage(response.data.message);
-          // return setDisplayModalErr(true);
+          setErrMessage(response.data.message);
+          return setDisplayModalErr(true);
         }
       })
       .catch((error) => {
+        setIsLoading(false);
+          setErrMessage(error.message);
+          return setDisplayModalErr(true);
         console.log("Login error code: ", error.message);
       });
-      console.log("login function pinged", isUser, password)
+    console.log("login function pinged", isUser, password);
   };
   // check if value is empty or undefined
   const isEmptyOrUndefined = (value) => {
@@ -98,7 +114,7 @@ const Login = ({ navigation }) => {
 
   // run all validation function
   const validateInput = (isUser, password) => {
-    console.log("validate function pinged", isUser, password)
+    console.log("validate function pinged", isUser, password);
 
     if (isEmptyOrUndefined(isUser) || isEmptyOrUndefined(password)) {
       setErrMessage("All fields are required!!");
@@ -273,6 +289,20 @@ const Login = ({ navigation }) => {
           </Pressable>
         </View>
       </View>
+
+      {displayModalErr === true ? (
+        <ErrorModal hideErrorOverlay={setDisplayModalErr} err={errMessage} />
+      ) : null}
+
+      {isLoading === true ? (
+        <FormSuccess />
+      ) : successMessage == "Login successful" ? (
+        <FormSuccess
+          successMessage={successMessage}
+          close={setSuccessMessage}
+          onPress={() => navigation.navigate("BottomTabNavigation")}
+        />
+      ) : null}
     </SafeAreaView>
   );
 };

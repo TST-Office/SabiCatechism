@@ -11,7 +11,7 @@ import { Overlay } from "@rneui/themed";
 import { COLORS, SIZES, colors, images } from "../constants";
 import Button from "./Button";
 
-const FormSuccess = ({ props }) => {
+const FormSuccess = (props) => {
     
   const colorScheme = useColorScheme();
 
