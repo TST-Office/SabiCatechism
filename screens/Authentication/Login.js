@@ -5,51 +5,131 @@ import {
   Pressable,
   TextInput,
   TouchableOpacity,
-  Stylesheet
+  Stylesheet,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import COLORS from "../../constants/colors";
+import { COLORS, API_URL } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
+import * as Device from "expo-device";
 import Button from "../../components/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../slices/userSlice";
 import axios from "axios";
 import ErrorModal from "../../components/ErrorModal";
+import FormSuccess from "../../components/FormSuccess";
 
 const Login = ({ navigation }) => {
-  const [isPasswordShown, setIsPasswordShown] = useState(false);
   const dispatch = useDispatch();
 
-  const userData = {
-    id: 1,
-    username: "example_user",
-    email: "example@example.com",
-    // Other user-related data
-  };
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  dispatch(setUser(userData));
+  const [password, setPassword] = useState("");
+  const [isUser, setIsUser] = useState("");
+
+  const [successMessage, setSuccessMessage] = useState(false);
+  const [errMessage, setErrMessage] = useState(false);
+
+  const [displayModalSuccess, setDisplayModalSuccess] = useState(false);
+  const [displayModalErr, setDisplayModalErr] = useState(false);
 
   const [showError, setShowError] = useState(false);
 
-  // Function to show the error modal
-  const showErrorModal = () => {
-    setShowError(true);
+  const passwordChange = (value) => {
+    setPassword(value);
   };
 
-  // Function to hide the error modal
-  const hideErrorModal = () => {
-    setShowError(false);
+  const isUserChange = (value) => {
+    setIsUser(value);
+  };
+  // Now try to log the user in
+  const loginUser = () => {
+    setIsLoading(true);
+    console.log(API_URL)
+    axios
+      .post(`${API_URL}/login`, {
+        username: isUser,
+        password: password,
+        devicename: Device.modelName,
+      })
+      .then((response) => {
+        console.log("request sent", response.data, isUser)
+        if (response.data.status === true) {
+          console.log("Login success response: ", response.data.username );
+        }
+        if (response.data.status === false) {
+          setIsLoading(false);
+          // setErrMessage(response.data.message);
+          // return setDisplayModalErr(true);
+        }
+      })
+      .catch((error) => {
+        console.log("Login error code: ", error.message);
+      });
+      console.log("login function pinged", isUser, password)
+  };
+  // check if value is empty or undefined
+  const isEmptyOrUndefined = (value) => {
+    return value === "" || value === undefined;
+  };
+
+  // check if its a valid email
+  const isValidEmail = (value) => {
+    return value.includes("@");
+  };
+
+  // check if its a valid email format
+  const isValidEmailFormat = (email) => {
+    const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+    return emailRegex.test(email);
+  };
+
+  // is valid username
+  const isValidUsername = (value) => {
+    return value.match(/^[a-zA-Z0-9_]+$/);
+  };
+
+  // is valid username format
+  const isValidUsernameFormat = (username) => {
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    return usernameRegex.test(username);
+  };
+
+  // run all validation function
+  const validateInput = (isUser, password) => {
+    console.log("validate function pinged", isUser, password)
+
+    if (isEmptyOrUndefined(isUser) || isEmptyOrUndefined(password)) {
+      setErrMessage("All fields are required!!");
+      return setDisplayModalErr(true);
+    }
+
+    if (isValidEmail(isUser)) {
+      if (!isValidEmailFormat(isUser)) {
+        setErrMessage("Invalid email format!");
+        return setDisplayModalErr(true);
+      }
+    } else if (isValidUsername(isUser)) {
+      if (!isValidUsernameFormat(isUser)) {
+        setErrMessage("Invalid username format!");
+        return setDisplayModalErr(true);
+      }
+    } else {
+      setErrMessage("Invalid email or username!!");
+      return setDisplayModalErr(true);
+    }
+
+    if (password.length < 6) {
+      setErrMessage("Password is too short!");
+      return setDisplayModalErr(true);
+    }
+    // validation run the login user function
+    loginUser();
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-     {showError && (
-        <ErrorModal
-          err="An error occurred!" // Replace with your error message
-          onPress={hideErrorModal}
-        />
-      )}
       <View style={{ flex: 1, marginHorizontal: 22 }}>
         <View style={{ marginVertical: 22 }}>
           <Text
@@ -99,8 +179,9 @@ const Login = ({ navigation }) => {
             <TextInput
               placeholder="Enter your email or username"
               placeholderTextColor={COLORS.black}
-              keyboardType="email-address" 
-              
+              keyboardType="email-address"
+              onChangeText={isUserChange}
+              value={isUser}
               style={{
                 width: "100%",
               }}
@@ -135,6 +216,8 @@ const Login = ({ navigation }) => {
               placeholder="Enter your password"
               placeholderTextColor={COLORS.black}
               secureTextEntry={isPasswordShown}
+              onChangeText={passwordChange}
+              value={password}
               style={{
                 width: "100%",
               }}
@@ -163,7 +246,7 @@ const Login = ({ navigation }) => {
             marginTop: 18,
             marginBottom: 4,
           }}
-          onPress={showErrorModal}
+          onPress={() => validateInput(isUser, password)}
         />
 
         <View
