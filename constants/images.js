@@ -8,6 +8,9 @@ const photo5 = require("../assets/images/photo5.jpg");
 const photo6 = require("../assets/images/photo6.jpg");
 const checkedSuccess = require("../assets/images/checked.png");
 const checkedError = require('../assets/images/error.png')
+const carousel1 = require("../assets/carousel/carousel1.jpg");
+const carousel2 = require("../assets/carousel/carousel2.jpg");
+const carousel3 = require("../assets/carousel/carousel3.jpg");
 
 export default {
     profile,
@@ -19,5 +22,8 @@ export default {
     photo5,
     photo6,
     checkedSuccess,
-    checkedError
+    checkedError,
+    carousel1,
+    carousel2,
+    carousel3
 }

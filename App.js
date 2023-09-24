@@ -1,13 +1,11 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
-import { EditProfile, Login, Signup, Welcome, Profile } from "./screens";
-import BottomTabNav from "./navigations/BottomTabNav";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./slices/store";
+import ProtectedNavigation from "./navigations/ProtectedNavigation";
 
 //  number of downloads and location
 //  user subscriptIon admin info
@@ -19,7 +17,7 @@ import { store, persistor } from "./slices/store";
 //  NOTE: show number of times user subscribed to a plan and the name of the plan***
 
 SplashScreen.preventAutoHideAsync();
-const Stack = createNativeStackNavigator();
+
 
 export default function App() {
   
@@ -44,51 +42,7 @@ export default function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer onReady={onLayoutRootView}>
-          <Stack.Navigator initialRouteName="Welcome">
-            <Stack.Screen
-              name="BottomTabNavigation"
-              component={BottomTabNav}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="Welcome"
-              component={Welcome}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="Signup"
-              component={Signup}
-              options={{
-                headerShown: false,
-              }}
-            />
-
-            <Stack.Screen
-              name="Profile"
-              component={Profile}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="EditProfile"
-              component={EditProfile}
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack.Navigator>
+          <ProtectedNavigation  />          
         </NavigationContainer>
       </PersistGate>
     </Provider>

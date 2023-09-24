@@ -46,7 +46,7 @@ const FormSuccess = (props) => {
       }
       isVisible={true}
     >
-      <ActivityIndicator size={"large"} color={COLORS.secondary} />
+      <ActivityIndicator size={"large"} color={colors.primary} />
     </Overlay>
   );
   return (
