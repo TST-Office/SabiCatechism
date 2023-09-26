@@ -6,11 +6,12 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./slices/store";
 import ProtectedNavigation from "./navigations/ProtectedNavigation";
+import { ThemeProvider } from "./themes/ThemeProvider";
 
 //  number of downloads and location
 //  user subscriptIon admin info
 //  nav link will be called subscription plans
-//  subscribed members 
+//  subscribed members
 //  name in payment details for single user
 //  username, amount, reference, status, remove email
 //  NOTE: count how many times a user have paid for subscription ***
@@ -18,9 +19,7 @@ import ProtectedNavigation from "./navigations/ProtectedNavigation";
 
 SplashScreen.preventAutoHideAsync();
 
-
 export default function App() {
-  
   const [fontsLoaded] = useFonts({
     black: require("./assets/fonts/Inter-Black.ttf"),
     bold: require("./assets/fonts/Inter-Bold.ttf"),
@@ -41,9 +40,11 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer onReady={onLayoutRootView}>
-          <ProtectedNavigation  />          
-        </NavigationContainer>
+        <ThemeProvider>
+          <NavigationContainer onReady={onLayoutRootView}>
+            <ProtectedNavigation />
+          </NavigationContainer>
+        </ThemeProvider>
       </PersistGate>
     </Provider>
   );

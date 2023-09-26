@@ -13,8 +13,12 @@ import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { photos } from "../../constants/data";
+import { useTheme } from "../../themes/ThemeProvider";
 
 const PhotosRoutes = () => (
+  
+
+
   <View style={{ flex: 1 }}>
     <FlatList
       data={photos}
@@ -65,27 +69,32 @@ const Profile = () => {
     <TabBar
       {...props}
       indicatorStyle={{
-        backgroundColor: COLORS.primary,
+        backgroundColor: colors.background,
       }}
       style={{
-        backgroundColor: COLORS.white,
+        backgroundColor: colors.background,
         height: 44,
       }}
       renderLabel={({ focused, route }) => (
-        <Text style={[{ color: focused ? COLORS.black : COLORS.gray }]}>
+        <Text style={[{ color: focused ? colors.text : colors.text }]}>
           {route.title}
         </Text>
       )}
     />
   );
+  const {dark, colors, setScheme} = useTheme();
+
+  const ToggleTheme = () => {
+    dark ? setScheme("light") : setScheme("dark");
+  };
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: COLORS.white,
+        backgroundColor: colors.background,
       }}
     >
-      <StatusBar backgroundColor={COLORS.gray} />
+      <StatusBar backgroundColor={COLORS.secondaryGray} />
       <View style={{ width: "100%" }}>
         <Image
           source={images.cover}
@@ -105,7 +114,7 @@ const Profile = () => {
             height: 155,
             width: 155,
             borderRadius: 999,
-            borderColor: COLORS.primary,
+            borderColor: colors.tabActiveText,
             borderWidth: 2,
             marginTop: -90,
           }}
@@ -114,7 +123,7 @@ const Profile = () => {
         <Text
           style={{
             ...FONTS.h3,
-            color: COLORS.primary,
+            color: colors.text,
             marginVertical: 8,
           }}
         >
@@ -122,7 +131,7 @@ const Profile = () => {
         </Text>
         <Text
           style={{
-            color: COLORS.black,
+            color: colors.text,
             ...FONTS.body4,
           }}
         >
@@ -136,11 +145,12 @@ const Profile = () => {
             alignItems: "center",
           }}
         >
-          <MaterialIcons name="location-on" size={24} color="black" />
+          <MaterialIcons name="location-on" size={24} color={colors.tabBackground} />
           <Text
             style={{
               ...FONTS.body4,
               marginLeft: 4,
+              color: colors.text
             }}
           >
             Lagos, Nigeria
@@ -163,7 +173,7 @@ const Profile = () => {
             <Text
               style={{
                 ...FONTS.h2,
-                color: COLORS.primary,
+                color: colors.text,
               }}
             >
               122
@@ -171,7 +181,7 @@ const Profile = () => {
             <Text
               style={{
                 ...FONTS.body4,
-                color: COLORS.primary,
+                color: colors.text,
               }}
             >
               Followers
@@ -188,7 +198,7 @@ const Profile = () => {
             <Text
               style={{
                 ...FONTS.h2,
-                color: COLORS.primary,
+                color: colors.text,
               }}
             >
               67
@@ -196,7 +206,7 @@ const Profile = () => {
             <Text
               style={{
                 ...FONTS.body4,
-                color: COLORS.primary,
+                color: colors.text,
               }}
             >
               Followings
@@ -213,7 +223,7 @@ const Profile = () => {
             <Text
               style={{
                 ...FONTS.h2,
-                color: COLORS.primary,
+                color: colors.text,
               }}
             >
               77K
@@ -221,7 +231,7 @@ const Profile = () => {
             <Text
               style={{
                 ...FONTS.body4,
-                color: COLORS.primary,
+                color:colors.text,
               }}
             >
               Likes
@@ -236,7 +246,7 @@ const Profile = () => {
               height: 36,
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: COLORS.primary,
+              backgroundColor: colors.bgGray,
               borderRadius: 10,
               marginHorizontal: SIZES.padding * 2,
             }}
@@ -244,7 +254,7 @@ const Profile = () => {
             <Text
               style={{
                 ...FONTS.body4,
-                color: COLORS.white,
+                color: colors.text,
               }}
             >
               Edit Profile
@@ -257,7 +267,7 @@ const Profile = () => {
               height: 36,
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: COLORS.primary,
+              backgroundColor: colors.bgGray,
               borderRadius: 10,
               marginHorizontal: SIZES.padding * 2,
             }}
@@ -265,7 +275,7 @@ const Profile = () => {
             <Text
               style={{
                 ...FONTS.body4,
-                color: COLORS.white,
+                color: colors.text,
               }}
             >
               Add Friend
@@ -274,7 +284,7 @@ const Profile = () => {
         </View>
       </View>
 
-      <View style={{ flex: 1, marginHorizontal: 22, marginTop: 20 }}>
+      <View style={{ flex: 1, marginHorizontal: 15, marginTop: 20 }}>
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}
