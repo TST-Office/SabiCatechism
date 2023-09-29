@@ -9,18 +9,12 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { COLORS } from "../constants";
 import {Home, Profile, Settings, Blog, Messages } from "../screens";
-import { useTheme } from "../themes/ThemeProvider";
 
 const Tab = createBottomTabNavigator();
 
 
 const BottomTabNav = () => {
-  const {dark, colors, setScheme} = useTheme();
-
-  const ToggleTheme = () => {
-    dark ? setScheme("light") : setScheme("dark");
-  };
-
+  
 const screenOptions = {
   tabBarShowLabel: false,
   headerShown: false,
@@ -32,7 +26,7 @@ const screenOptions = {
     left: 0,
     elevation: 0,
     height: 60,
-    backgroundColor: colors.tabBackground,
+    backgroundColor: COLORS.gray,
   },
 };
   return (

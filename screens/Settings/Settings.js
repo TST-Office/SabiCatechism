@@ -3,16 +3,23 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS } from "../../constants";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useTheme } from "../../themes/ThemeProvider";
+import Container from '../../components/Container';
+import { useSelector } from "react-redux";
+import { DarkBgColors, LightBgColors } from "../../constants/theme";
+import ThemeToggleButton from "../../components/ThemeToggleButton";
 
 const Settings = ({ navigation }) => {
+  // Access the current theme from the Redux store
+  const theme = useSelector((state) => state.theme);
 
-  const {dark, colors, setScheme} = useTheme();
-
-  const ToggleTheme = () => {
-    dark ? setScheme("light") : setScheme("dark");
+  // Define a style object for text and icon colors based on the theme
+  const textAndIconStyles = {
+    color: theme === "light" ? DarkBgColors.headings : DarkBgColors.headings,
   };
-
+  // Define a style object for text and icon colors based on the theme
+  const touchableBg = {
+    color: theme === "light" ? DarkBgColors.primary : LightBgColors.primary,
+  };
   const navigateToEditProfile = () => {
     navigation.navigate("EditProfile");
   };
@@ -42,13 +49,10 @@ const Settings = ({ navigation }) => {
   };
 
   const navigateToFreeSpace = () => {
-    ToggleTheme()
     console.log("Free Space function");
   };
 
   const navigateToDateSaver = () => {
-    ToggleTheme()
-
     console.log("Date saver");
   };
 
@@ -57,7 +61,7 @@ const Settings = ({ navigation }) => {
   };
 
   const addAccount = () => {
-    console.log("Aadd account ");
+    console.log("Add account ");
   };
 
   const logout = () => {
@@ -93,13 +97,14 @@ const Settings = ({ navigation }) => {
     },
   ];
 
-  const cacheAndCellularItems = [
-    dark ? 
-     { icon: "lightbulb-outline", text: "Light mode", action: navigateToDateSaver } : { icon: "lightbulb-outline", text: "Dark mode", action: navigateToDateSaver }
-  ];
 
   const actionsItems = [
-    
+    {
+      icon: "outlined-flag",
+      text: "Report a problem",
+      action: navigateToReportProblem,
+    },
+    { icon: "people-outline", text: "Add Account", action: addAccount },
     { icon: "logout", text: "Log out", action: logout },
   ];
 
@@ -111,17 +116,17 @@ const Settings = ({ navigation }) => {
         alignItems: "center",
         paddingVertical: 8,
         paddingLeft: 12,
-        backgroundColor: colors.bgGray,
+        backgroundColor: theme === "light" ? DarkBgColors.bgGray : LightBgColors.bgGray,
       }}
     >
-      <MaterialIcons name={icon} size={24} color={colors.text} />
+      <MaterialIcons name={icon} size={24} color={theme === "light" ? DarkBgColors.headings : COLORS.primary} />
       <Text
         style={{
           marginLeft: 36,
           ...FONTS.semiBold,
           fontWeight: 600,
           fontSize: 16,
-          color:colors.text
+          color: theme === "light" ? DarkBgColors.text : LightBgColors.text
         }}
       >
         {text}{" "}
@@ -129,22 +134,13 @@ const Settings = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-
-
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: colors.background,
-        color: colors.text
-      }}
-    >
+    <Container>
       <View
         style={{
           marginHorizontal: 12,
           flexDirection: "row",
           justifyContent: "center",
-          marginTop: 20
         }}
       >
         <TouchableOpacity
@@ -157,21 +153,21 @@ const Settings = ({ navigation }) => {
           <MaterialIcons
             name="keyboard-arrow-left"
             size={24}
-            color={colors.text}
+            color={COLORS.black}
           />
         </TouchableOpacity>
 
-        <Text style={{ ...FONTS.h3, color:colors.text }}>Settings</Text>
+        <Text style={{ ...FONTS.h3, ...textAndIconStyles }}>Settings</Text>
       </View>
 
-      <ScrollView style={{ marginHorizontal: 12 }}>
+      <ScrollView style={{ marginHorizontal: 12, marginTop:20 }}>
         {/* Account Settings */}
         <View style={{ marginBottom: 12 }}>
-          <Text style={{ ...FONTS.h4, marginVertical: 10, color: colors.text }}>Account</Text>
+          <Text style={{ ...FONTS.h4, marginVertical: 10, ...textAndIconStyles }}>Account</Text>
           <View
             style={{
               borderRadius: 12,
-              backgroundColor:  dark ? colors.background : colors.background,
+              backgroundColor: {touchableBg},
             }}
           >
             {accountItems.map((item, index) => (
@@ -185,13 +181,13 @@ const Settings = ({ navigation }) => {
         {/* Support and About settings */}
 
         <View style={{ marginBottom: 12 }}>
-          <Text style={{ ...FONTS.h4, marginVertical: 10, color: colors.text }}>
+          <Text style={{ ...FONTS.h4, marginVertical: 10, ...textAndIconStyles  }}>
             Support & About{" "}
           </Text>
           <View
             style={{
               borderRadius: 12,
-              backgroundColor: colors.bgGray,
+              backgrounColor: COLORS.gray,
             }}
           >
             {supportItems.map((item, index) => (
@@ -202,33 +198,30 @@ const Settings = ({ navigation }) => {
           </View>
         </View>
 
-        {/* theme */}
+        {/* Theme settings */}
         <View style={{ marginBottom: 12 }}>
-          <Text style={{ ...FONTS.h4, marginVertical: 10, color: colors.text }}>
-            Theme{" "}
+          <Text style={{ ...FONTS.h4, marginVertical: 10, ...textAndIconStyles  }}>
+            Theme Setting{" "}
           </Text>
           <View
             style={{
               borderRadius: 12,
-              backgroundColor: colors.bgGray,
+              backgroundColor: COLORS.gray,
             }}
           >
-            {cacheAndCellularItems.map((item, index) => (
-              <React.Fragment key={index}>
-                {renderSettingsItem(item)}
-              </React.Fragment>
-            ))}
+              <ThemeToggleButton />
+            
           </View>
         </View>
 
         {/* Actions Settings */}
 
-        <View style={{ marginBottom: 10,}}>
-          <Text style={{ ...FONTS.h4, marginVertical: 15, color: colors.text }}>Actions</Text>
+        <View style={{ marginBottom: 12 }}>
+          <Text style={{ ...FONTS.h4, marginVertical: 10, ...textAndIconStyles  }}>Actions</Text>
           <View
             style={{
               borderRadius: 12,
-              backgroundColor: colors.bgGray,
+              backgrounColor: COLORS.gray,
             }}
           >
             {actionsItems.map((item, index) => (
@@ -239,7 +232,7 @@ const Settings = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </Container>
   );
 };
 

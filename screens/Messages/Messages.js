@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React from 'react';
+import Container from '../../components/Container';
 
 const Messages = () => {
   return (
-    <View>
+    <Container>
       <Text>Messages</Text>
-    </View>
+    </Container>
   )
 }
 

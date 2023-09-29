@@ -6,7 +6,9 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./slices/store";
 import ProtectedNavigation from "./navigations/ProtectedNavigation";
-import { ThemeProvider } from "./themes/ThemeProvider";
+import ThemeToggleButton from "./components/ThemeToggleButton";
+import { useSelector } from "react-redux";
+import { ThemeProvider } from "./components/ThemeContext";
 
 //  number of downloads and location
 //  user subscriptIon admin info
@@ -44,7 +46,7 @@ export default function App() {
           <NavigationContainer onReady={onLayoutRootView}>
             <ProtectedNavigation />
           </NavigationContainer>
-        </ThemeProvider>
+          </ThemeProvider>
       </PersistGate>
     </Provider>
   );

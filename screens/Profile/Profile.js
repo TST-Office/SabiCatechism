@@ -13,8 +13,9 @@ import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { photos } from "../../constants/data";
-import { useTheme } from "../../themes/ThemeProvider";
-
+import Container from "../../components/Container";
+import { useSelector } from "react-redux";
+import { DarkBgColors, LightBgColors } from "../../constants/theme";
 const PhotosRoutes = () => (
   
 
@@ -60,6 +61,18 @@ const Profile = () => {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
 
+  // Access the current theme from the Redux store
+  const theme = useSelector((state) => state.theme);
+
+  // Define a style object for text and icon colors based on the theme
+  const textAndIconStyles = {
+    color: theme === "light" ? DarkBgColors.headings : DarkBgColors.headings,
+  };
+  // Define a style object for text and icon colors based on the theme
+  const touchableBg = {
+    color: theme === "light" ? DarkBgColors.primary : LightBgColors.primary,
+  };
+
   const [routes] = useState([
     { key: "first", title: "Photos" },
     { key: "second", title: "Likes" },
@@ -69,31 +82,21 @@ const Profile = () => {
     <TabBar
       {...props}
       indicatorStyle={{
-        backgroundColor: colors.background,
+        backgroundColor: theme === "light" ? COLORS.primary : LightBgColors.primary,
       }}
       style={{
-        backgroundColor: colors.background,
+        backgroundColor: theme === "light" ? COLORS.primary : COLORS.primary,
         height: 44,
       }}
       renderLabel={({ focused, route }) => (
-        <Text style={[{ color: focused ? colors.text : colors.text }]}>
+        <Text style={[{ color: focused ? theme === "light" ? DarkBgColors.text : DarkBgColors.moon : theme === "light" ? LightBgColors.text : LightBgColors.sun }]}>
           {route.title}
         </Text>
       )}
     />
   );
-  const {dark, colors, setScheme} = useTheme();
-
-  const ToggleTheme = () => {
-    dark ? setScheme("light") : setScheme("dark");
-  };
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: colors.background,
-      }}
-    >
+    <Container>
       <StatusBar backgroundColor={COLORS.secondaryGray} />
       <View style={{ width: "100%" }}>
         <Image
@@ -114,8 +117,8 @@ const Profile = () => {
             height: 155,
             width: 155,
             borderRadius: 999,
-            borderColor: colors.tabActiveText,
-            borderWidth: 2,
+            borderColor: theme === "light" ? DarkBgColors.primary : LightBgColors.primary,
+            borderWidth: 5,
             marginTop: -90,
           }}
         />
@@ -123,7 +126,7 @@ const Profile = () => {
         <Text
           style={{
             ...FONTS.h3,
-            color: colors.text,
+            color: theme === "light" ? DarkBgColors.text : COLORS.text,
             marginVertical: 8,
           }}
         >
@@ -131,7 +134,7 @@ const Profile = () => {
         </Text>
         <Text
           style={{
-            color: colors.text,
+            color: theme === "light" ? DarkBgColors.text : COLORS.text,
             ...FONTS.body4,
           }}
         >
@@ -145,108 +148,27 @@ const Profile = () => {
             alignItems: "center",
           }}
         >
-          <MaterialIcons name="location-on" size={24} color={colors.tabBackground} />
+          <MaterialIcons name="location-on" size={24} color={theme === "light" ? DarkBgColors.primary : LightBgColors.primary} />
           <Text
             style={{
               ...FONTS.body4,
               marginLeft: 4,
-              color: colors.text
+              color: theme === "light" ? DarkBgColors.text : COLORS.text
             }}
           >
             Lagos, Nigeria
           </Text>
         </View>
 
-        <View
-          style={{
-            paddingVertical: 8,
-            flexDirection: "row",
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginHorizontal: SIZES.padding,
-            }}
-          >
-            <Text
-              style={{
-                ...FONTS.h2,
-                color: colors.text,
-              }}
-            >
-              122
-            </Text>
-            <Text
-              style={{
-                ...FONTS.body4,
-                color: colors.text,
-              }}
-            >
-              Followers
-            </Text>
-          </View>
 
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginHorizontal: SIZES.padding,
-            }}
-          >
-            <Text
-              style={{
-                ...FONTS.h2,
-                color: colors.text,
-              }}
-            >
-              67
-            </Text>
-            <Text
-              style={{
-                ...FONTS.body4,
-                color: colors.text,
-              }}
-            >
-              Followings
-            </Text>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginHorizontal: SIZES.padding,
-            }}
-          >
-            <Text
-              style={{
-                ...FONTS.h2,
-                color: colors.text,
-              }}
-            >
-              77K
-            </Text>
-            <Text
-              style={{
-                ...FONTS.body4,
-                color:colors.text,
-              }}
-            >
-              Likes
-            </Text>
-          </View>
-        </View>
-
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", marginTop: 40 }}>
           <TouchableOpacity
             style={{
               width: 124,
               height: 36,
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: colors.bgGray,
+              backgroundColor: theme === "light" ? DarkBgColors.headings : COLORS.primary,
               borderRadius: 10,
               marginHorizontal: SIZES.padding * 2,
             }}
@@ -254,7 +176,7 @@ const Profile = () => {
             <Text
               style={{
                 ...FONTS.body4,
-                color: colors.text,
+                color: theme === "light" ? DarkBgColors.text : COLORS.white,
               }}
             >
               Edit Profile
@@ -267,7 +189,7 @@ const Profile = () => {
               height: 36,
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: colors.bgGray,
+              backgroundColor: theme === "light" ? DarkBgColors.headings : COLORS.primary,
               borderRadius: 10,
               marginHorizontal: SIZES.padding * 2,
             }}
@@ -275,7 +197,7 @@ const Profile = () => {
             <Text
               style={{
                 ...FONTS.body4,
-                color: colors.text,
+                color: theme === "light" ? DarkBgColors.text : COLORS.white,
               }}
             >
               Add Friend
@@ -293,7 +215,7 @@ const Profile = () => {
           renderTabBar={renderTabBar}
         />
       </View>
-    </SafeAreaView>
+    </Container>
   );
 };
 
