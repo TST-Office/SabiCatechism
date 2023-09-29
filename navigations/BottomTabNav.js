@@ -9,12 +9,24 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { COLORS } from "../constants";
 import {Home, Profile, Settings, Blog, Messages } from "../screens";
+import { useSelector } from "react-redux";
+import { DarkBgColors, LightBgColors } from "../constants/theme";
 
 const Tab = createBottomTabNavigator();
 
 
 const BottomTabNav = () => {
-  
+  // Access the current theme from the Redux store
+  const theme = useSelector((state) => state.theme);
+
+  // Define a style object for text and icon colors based on the theme
+  const textAndIconStyles = {
+    color: theme === "light" ? DarkBgColors.headings : DarkBgColors.headings,
+  };
+  // Define a style object for text and icon colors based on the theme
+  const touchableBg = () => {
+     return theme === "light" ? DarkBgColors.background : LightBgColors.background
+  };
 const screenOptions = {
   tabBarShowLabel: false,
   headerShown: false,
@@ -26,7 +38,7 @@ const screenOptions = {
     left: 0,
     elevation: 0,
     height: 60,
-    backgroundColor: COLORS.gray,
+    backgroundColor: touchableBg(),
   },
 };
   return (
@@ -40,7 +52,7 @@ const screenOptions = {
               <SimpleLineIcons
                 name="home"
                 size={24}
-                color={focused ? COLORS.primary : COLORS.black}
+                color={focused ? theme === "light" ? DarkBgColors.text : DarkBgColors.primary : theme === "light" ? LightBgColors.headings : LightBgColors.tabBackground}
               />
             );
           },
@@ -56,7 +68,7 @@ const screenOptions = {
               <MaterialCommunityIcons
                 name="message-text-outline"
                 size={24}
-                color={focused ? COLORS.primary : COLORS.black}
+                color={focused ? theme === "light" ? DarkBgColors.text : DarkBgColors.primary : theme === "light" ? LightBgColors.headings : LightBgColors.tabBackground}
               />
             );
           },
@@ -98,7 +110,7 @@ const screenOptions = {
               <MaterialIcons
                 name="settings"
                 size={24}
-                color={focused ? COLORS.primary : COLORS.black}
+                color={focused ? theme === "light" ? DarkBgColors.text : DarkBgColors.primary : theme === "light" ? LightBgColors.headings : LightBgColors.tabBackground}
               />
             );
           },
@@ -114,7 +126,7 @@ const screenOptions = {
               <MaterialIcons
                 name="person-outline"
                 size={24}
-                color={focused ? COLORS.primary : COLORS.black}
+                color={focused ? theme === "light" ? DarkBgColors.text : DarkBgColors.primary : theme === "light" ? LightBgColors.headings : LightBgColors.tabBackground}
               />
             );
           },
