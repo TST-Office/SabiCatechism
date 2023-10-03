@@ -33,7 +33,15 @@ const HeaderSection = (props) => {
             textTransform: "capitalize"
           }}
         >
-          {user.user.username}
+         Hello 
+        <Text
+         style={{
+            fontSize: FONTS.body4.fontSize,
+            fontFamily: FONTS.body4.fontFamily,
+            color: theme === "light" ? DarkBgColors.text : LightBgColors.text,
+            textTransform: "capitalize"
+          }}
+        > {user.user.username}</Text>
         </Text>
       </View>
       <View>
@@ -66,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal:12,
-    paddingVertical:15
+    paddingTop:10
   },
   profileImage: {
     height: 50,

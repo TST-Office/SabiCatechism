@@ -74,13 +74,7 @@ const Settings = ({ navigation }) => {
       text: "Edit Profile",
       action: navigateToEditProfile,
     },
-    { icon: "security", text: "Security", action: navigateToSecurity },
-    {
-      icon: "notifications-none",
-      text: "Notifications",
-      action: navigateToNotifications,
-    },
-    { icon: "lock-outline", text: "Privacy", action: navigateToPrivacy },
+    
   ];
 
   const supportItems = [
@@ -90,11 +84,7 @@ const Settings = ({ navigation }) => {
       action: navigateToSubscription,
     },
     { icon: "help-outline", text: "Help & Support", action: navigateToSupport },
-    {
-      icon: "info-outline",
-      text: "Terms and Policies",
-      action: navigateToTermsAndPolicies,
-    },
+    
   ];
 
 
@@ -138,6 +128,7 @@ const Settings = ({ navigation }) => {
     <Container>
       <View
         style={{
+          marginTop: 20,
           marginHorizontal: 12,
           flexDirection: "row",
           justifyContent: "center",

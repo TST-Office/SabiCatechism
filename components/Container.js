@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet, SafeAreaView } from "react-native";
 import { useSelector } from "react-redux"; // Import useSelector from react-redux
-import ThemeToggleButton from "./ThemeToggleButton";
 import { DarkBgColors, LightBgColors } from "../constants/theme";
 
 const Container = ({ children, style }) => {
