@@ -7,6 +7,7 @@ import { DarkBgColors, LightBgColors } from "../constants/theme";
 const Container = ({ children, style }) => {
   // Access the current theme from the Redux store
   const theme = useSelector((state) => state.theme);
+  const user = useSelector((state) => state.user);
 
   // Define the internal styles for the Container
   const internalStyles = StyleSheet.create({
@@ -14,6 +15,7 @@ const Container = ({ children, style }) => {
       backgroundColor: theme === "light" ? DarkBgColors.background : LightBgColors.background,
       flex: 1,
       color: theme === "light" ? DarkBgColors.text : LightBgColors.text,
+      paddingTop: 30,
     },
     Text: {
       color: theme === "light" ? DarkBgColors.text : LightBgColors.text,
@@ -25,7 +27,6 @@ const Container = ({ children, style }) => {
 
   return (
     <SafeAreaView style={combinedStyles}>
-
       {children}
     </SafeAreaView>
   );

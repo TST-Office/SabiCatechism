@@ -35,7 +35,7 @@ const FormSuccess = (props) => {
         onPress={props.onPress}
         style={{
           marginTop: 22,
-          width: "100%",
+          width: "50%",
         }}
       />
     </Overlay>

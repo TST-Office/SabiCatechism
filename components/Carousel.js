@@ -43,7 +43,6 @@ const Carousel = () => {
   }
   return (
     <View>
-      <Text>carousel</Text>
       <FlatList 
         data={carouselData}
         renderItem={renderItem}
