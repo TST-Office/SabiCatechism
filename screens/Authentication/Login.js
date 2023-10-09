@@ -45,7 +45,6 @@ const Login = ({ navigation }) => {
   // Now try to log the user in
   const loginUser = () => {
     setIsLoading(true);
-    console.log(API_URL);
     axios
       .post(`${API_URL}/login`, {
         username: isUser,

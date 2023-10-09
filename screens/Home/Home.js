@@ -13,6 +13,7 @@ import { COLORS, SIZES } from "../../constants";
 import Container from "../../components/Container"
 import HeaderSection from "../../components/HeaderSection";
 import SearchSection from "../../components/SearchSection";
+import CategorySection from "../../components/CategorySection";
 
 
 const Home = ({navigation}) => {
@@ -25,6 +26,7 @@ const Home = ({navigation}) => {
     <Container>
       <HeaderSection onPress={() => navigation.navigate("Profile")} />
       <SearchSection />
+      <CategorySection />
       <Carousel />
     </Container>
   );

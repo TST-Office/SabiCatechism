@@ -1,85 +1,57 @@
-import { StyleSheet, Text, View , FlatList, Image} from "react-native";
-import React from "react";
-import { COLORS, SIZES, images } from "../constants";
+import * as React from 'react';
+import { Dimensions, Image, Text, View,StyleSheet } from 'react-native';
+import Carousel from 'react-native-reanimated-carousel';
+import { images } from '../constants';
 
-const Carousel = () => {
+
+function Index() {
+  const width = Dimensions.get('window').width;
   const carouselData = [
-    { 
-      id: 1, 
-      image: images.carousel1 
-    },
-    { 
-      id: 2, 
-      image: images.carousel2 
-    },
-    { 
-      id: 3, 
-      image: images.carousel3 
-    },
+    { id: 1, image: images.carousel1, text: "Top 10" },
+    { id: 2, image: images.carousel2, text: "Trending" },
+    { id: 3, image: images.carousel3, text: "New Release" },
   ];
+  
 
-  // render image for flatList
-  const renderItem = ({item, index}) => {
-    return (
-      <View key={`carouselItem-${index}`}>
-        <Image source={item.image} style={styles.carouselImages}/>
-      </View>
-    )
-
-  }
-
-  // set indicators for carousel
-  const renderDotIndicators = () => {
-    return carouselData.map((dot, index) => {
-      return (
-        <View style={styles.indicators}></View>
-      )
-    })
-  }
-
-  // handle active indicator and active image scroll
-  const handleScroll = (event) => {
-
-  }
   return (
-    <View>
-      <FlatList 
-        data={carouselData}
-        renderItem={renderItem}
-        horizontal={true}
-        pagingEnabled={true}
-        onScroll={handleScroll}
-        key={(item, index) => `carouselItem-${index}`}
+    <View style={{ flex: 1 }}>
+      <Carousel
+        loop
+        width={width}
+        height={width / 2}
+        autoPlay={true}
+        data={carouselData} // Use the carouselData array as the data source
+        scrollAnimationDuration={5000}
+        onSnapToItem={(index) => console.log('current index:', index)}
+        renderItem={({ item }) => (
+          <View style={{ flex: 1 }}>
+            <Image
+              source={item.image}
+              style={{ width: '100%', height: '100%' }}
+              resizeMode="cover"
+            />
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>{item.text}</Text>
+            </View>
+          </View>
+        )}
       />
-      <View style={styles.indicateToCenter}>
-      {
-        renderDotIndicators()
-      }
-      </View>
-      
     </View>
   );
-};
-
-export default Carousel;
+}
 
 const styles = StyleSheet.create({
-  carouselImages:{
-    width: SIZES.width,
-    height: 300, 
-    resizeMode: 'cover'
+  textContainer: {
+    position: 'absolute',
+    top: 10, // Adjust the top position as needed
+    right: 10, // Adjust the right position as needed
   },
-  indicators:{
-    height: 10,
-    width: 10,
-    backgroundColor: COLORS.primary,
-    borderRadius: 5,
+  text: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background color for the text
+    color: 'white', // Text color
+    fontSize: 16, // Font size
+    padding: 5, // Padding around the text
+    borderRadius: 5, // Border radius for the text container
   },
-  indicateToCenter:{
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 10,
-    gap: 10,
-  }
 });
+export default Index;

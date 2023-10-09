@@ -12,7 +12,6 @@ import { COLORS, SIZES, colors, images } from "../constants";
 import Button from "./Button";
 
 const FormSuccess = (props) => {
-    
   const colorScheme = useColorScheme();
 
   return props.successMessage ? (
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
   textSecondary: {
     marginTop: 20,
     textAlign: "center",
-    color: colors.primary
+    color: colors.primary,
   },
   btnError: {
     backgroundColor: COLORS.primary,

@@ -25,7 +25,7 @@ const SearchSection = () => {
     searchWrapper: {
       flex: 1,
       backgroundColor: theme === "light" ? COLORS.primary : COLORS.gray,
-      marginRight: 2,
+      marginRight: 0,
       justifyContent: "center",
       alignItems: "center",
       borderRadius: 10,
@@ -45,7 +45,7 @@ const SearchSection = () => {
       width: 50,
       height: "100%",
       backgroundColor:
-        theme === "light" ? DarkBgColors.bgGray : COLORS.secondary,
+        theme === "light" ? COLORS.primary : COLORS.gray,
       borderRadius: 10,
       justifyContent: "center",
       alignItems: "center",
