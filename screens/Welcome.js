@@ -12,6 +12,7 @@ const Welcome = ({ navigation }) => {
       }}
       colors={[COLORS.secondary, COLORS.primary]}
     >
+
       <View style={{ flex: 1 }}>
         <View>
           <Image

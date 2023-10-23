@@ -20,7 +20,6 @@ const HeaderSection = (props) => {
             theme === "light"
               ? DarkBgColors.background
               : LightBgColors.background,
-            
         },
       ]}
     >

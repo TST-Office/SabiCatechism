@@ -6,6 +6,7 @@ import { images } from '../constants';
 
 function Index() {
   const width = Dimensions.get('window').width;
+  
   const carouselData = [
     { id: 1, image: images.carousel1, text: "Top 10" },
     { id: 2, image: images.carousel2, text: "Trending" },
@@ -14,7 +15,7 @@ function Index() {
   
 
   return (
-    <View style={{ flex: 1 }}>
+    <View>
       <Carousel
         loop
         width={width}
@@ -22,7 +23,7 @@ function Index() {
         autoPlay={true}
         data={carouselData} // Use the carouselData array as the data source
         scrollAnimationDuration={5000}
-        onSnapToItem={(index) => console.log('current index:', index)}
+        // onSnapToItem={(index) => console.log('current index:', index)}
         renderItem={({ item }) => (
           <View style={{ flex: 1 }}>
             <Image
