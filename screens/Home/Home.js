@@ -16,6 +16,7 @@ import HeaderSection from "../../components/HeaderSection";
 import SearchSection from "../../components/SearchSection";
 import CategorySection from "../../components/CategorySection";
 import LatestVideos from "../../components/videos/LatestVideos";
+import LatestBlogs from "../../components/Blog/LatestBlogs";
 
 const Home = ({ navigation }) => {
   // const user = useSelector((state) => state.user);
@@ -30,6 +31,7 @@ const Home = ({ navigation }) => {
         <CategorySection />
         <Carousel />
         <LatestVideos />
+        <LatestBlogs />
       </ScrollView>
     </Container>
   );
