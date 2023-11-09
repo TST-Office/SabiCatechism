@@ -18,7 +18,6 @@ import { useVideosSelector } from "../videosSelector";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 
-
 const LatestVideos = () => {
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);
@@ -52,6 +51,38 @@ const LatestVideos = () => {
       </TouchableOpacity>
     );
   };
+
+  // suggest a random video component
+  const SuggestVideoComp = ({ video }) => {
+    return (
+      <TouchableOpacity onPress={""} style={styles.container}>
+        <ImageBackground
+          source={{ uri: `https://api.coinstarr.org/${video?.thumbnail}` }}
+          style={styles.imageBackground}
+        >
+          <View style={styles.overlay}>
+            <View style={styles.topRight}>
+              <Text style={styles.category}>{video?.catName}</Text>
+            </View>
+            <View style={styles.bottomCenter}>
+              <Text style={styles.titleSu}>{video?.title}</Text>
+            </View>
+          </View>
+        </ImageBackground>
+      </TouchableOpacity>
+    );
+  };
+  
+  // get a random video function
+  const selectRandomVideo = () => {
+    if (videos.length > 0) {
+      const randomIndex = Math.floor(Math.random() * videos.length);
+      return videos[randomIndex];
+    }
+    return null;
+  };
+  const suggestedVideo = selectRandomVideo(); // Get a random video
+  console.log("suggested video", suggestedVideo);
 
   useEffect(() => {
     setIsLoading(true);
@@ -142,6 +173,41 @@ const LatestVideos = () => {
       fontSize: SIZES.h4,
       fontWeight: "bold",
     },
+    container: {
+      height: 400,
+      width: "100%",
+      marginTop: 15,
+      overflow: "hidden",
+    },
+    imageBackground: {
+      ...StyleSheet.absoluteFillObject,
+      borderRadius: 10,
+      shadowColor: "black",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.2,
+      shadowRadius: 6,
+      elevation: 5,
+    },
+    topRight: {
+      position: "absolute",
+      top: 10,
+      right: 10,
+    },
+    category: {
+      color: "white",
+      fontSize: 16,
+    },
+    bottomCenter: {
+      flex: 1,
+      justifyContent: "flex-end",
+      alignItems: "center",
+      padding: 16,
+    },
+    titleSu: {
+      color: "white",
+      fontSize: 25,
+      textAlign: "center",
+    },
   });
   return (
     <View style={{ marginTop: 15, paddingHorizontal: 10 }}>
@@ -174,17 +240,33 @@ const LatestVideos = () => {
           />
         </TouchableOpacity>
       </View>
+
       {isLoading ? (
         <ActivityIndicator color={"green"} size={"large"} />
       ) : (
-        <FlatList
-          data={videos}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal={true}
-          renderItem={({ item }) => <VideoComponent video={item} />}
-          contentContainerStyle={{ columnGap: 12 }}
-          showsHorizontalScrollIndicator={false}
-        />
+        <>
+          <FlatList
+            data={videos}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal={true}
+            renderItem={({ item }) => <VideoComponent video={item} />}
+            contentContainerStyle={{ columnGap: 12 }}
+            showsHorizontalScrollIndicator={false}
+          />
+          {suggestedVideo && (
+            <View>
+              <Text
+                style={{
+                  color: theme === "light" ? COLORS.white : DarkBgColors.bgGray,
+                  fontSize: SIZES.h4,
+                }}
+              >
+                Suggested Video
+              </Text>
+              <SuggestVideoComp video={suggestedVideo} />
+            </View>
+          )}
+        </>
       )}
     </View>
   );

@@ -1,15 +1,9 @@
-import { useDispatch } from 'react-redux';
-import { setBlogPosts } from '../../slices/blogSlice';
-import { API_URL } from '../../constants';
+import { useSelector } from "react-redux";
+import blogSlice from "../../slices/blogSlice";
 
-const dispatch = useDispatch();
 
-export const fetchAndPersistLatestBlogs = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/blog`);
-    const latestBlogs = response.data;
-    dispatch(setBlogPosts(latestBlogs));
-  } catch (error) {
-    console.error('Error fetching latest blogs:', error);
-  }
-};
+export const useBlogsSelector = () => {
+
+    return useSelector((state) => state.blog);
+    
+}
