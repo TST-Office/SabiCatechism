@@ -14,10 +14,18 @@ import { API_URL, COLORS, SIZES } from "../../constants";
 import { setBlogPosts } from "../../slices/blogSlice";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
+
 const LatestBlogs = () => {
   const theme = useSelector((state) => state.theme);
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blog);
+  const navigation = useNavigation();
+
+  const allBlogNavigation = () => {
+    navigation.navigate("AllBlog");
+  }
   
 
   const [isLoading, setIsLoading] = useState(false);
@@ -198,9 +206,7 @@ const LatestBlogs = () => {
         </Text>
         <TouchableOpacity
           style={styles.showMoreButton}
-          onPress={() => {
-            // Handle the button press action here
-          }}
+          onPress={allBlogNavigation}
         >
           <Text style={styles.showMoreText}>Show more</Text>
           <MaterialIcons

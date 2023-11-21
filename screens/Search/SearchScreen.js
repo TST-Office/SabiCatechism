@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -28,6 +28,8 @@ const SearchScreen = () => {
   const theme = useSelector((state) => state.theme);
   const videos = useVideosSelector();
   const blogs = setBlogPosts();
+  const [isLoading, setIsLoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("")
 
   // Ensure that both videos and blogs are arrays
   const videosArray = Array.isArray(videos) ? videos : [];
@@ -43,15 +45,16 @@ const SearchScreen = () => {
   const combinedViewComponent = ({ item }) => {
     return (
       <TouchableOpacity style={styles.glassmorphicContainer}>
-      <ImageBackground
-        source={{ uri: `https://api.coinstarr.org/${item?.thumbnail}` }}
-        style={styles.imageBackground}
-        imageStyle={styles.imageStyle}
-      >
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.thumbnail}>{item.thumbnail}</Text>
-      </ImageBackground>
-    </TouchableOpacity>  
+        <ImageBackground
+          source={{ uri: `https://api.coinstarr.org/${item?.thumbnail}` }}
+          style={styles.imageBackground}
+          imageStyle={styles.imageStyle}
+        >
+          <View style={styles.overlay} />
+
+          <Text style={styles.title}>{item.title}</Text>
+        </ImageBackground>
+      </TouchableOpacity>
     );
   };
 
@@ -60,35 +63,44 @@ const SearchScreen = () => {
       flexGrow: 0, // Ensure the FlatList doesn't grow indefinitely
     },
     glassmorphicContainer: {
-      margin: 10,
+      margin: 5,
       padding: 16,
       borderRadius: 12,
-      overflow: 'hidden',
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      overflow: "hidden",
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      height: 260,
+      marginBottom: 60,
     },
     imageBackground: {
       flex: 1,
-      justifyContent: 'flex-end',
+      justifyContent: "flex-end",
       borderRadius: 12,
-      overflow: 'hidden',
+      overflow: "hidden",
     },
     imageStyle: {
       borderRadius: 12,
     },
     title: {
       fontSize: 18,
-      fontWeight: 'bold',
-      color: 'white',
+      fontWeight: "bold",
+      color: "white",
       marginBottom: 8,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
     },
     thumbnail: {
       fontSize: 14,
-      color: 'white',
+      color: "white",
     },
-   
-   
-   
-   
+    overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    flatList: {
+      flexGrow: 0, // Ensure the FlatList doesn't grow indefinitely
+    },
+
     searchContainer: {
       flexDirection: "row",
       alignItems: "center",
@@ -163,17 +175,15 @@ const SearchScreen = () => {
         {/* Render videos and blogs */}
 
         <View style={styles.container}>
-      <FlatList
-        data={combinedContent}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={combinedViewComponent}
-        style={styles.flatList}
-      />
-    </View>
-        
-        
-        
-        
+          <FlatList
+            data={combinedContent}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={combinedViewComponent}
+            style={styles.flatList}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
       </View>
     </Container>
   );

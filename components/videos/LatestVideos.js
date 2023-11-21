@@ -17,12 +17,19 @@ import { COLORS, API_URL, SIZES } from "../../constants";
 import { useVideosSelector } from "../videosSelector";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
 
 const LatestVideos = () => {
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);
   const [isLoading, setIsLoading] = useState(false);
   const videos = useVideosSelector();
+  const navigation = useNavigation();
+
+  const allVideoNavigateTo = () => {
+    navigation.navigate("AllVideos")
+  }
 
   const VideoComponent = ({ video }) => {
     return (
@@ -228,9 +235,7 @@ const LatestVideos = () => {
         </Text>
         <TouchableOpacity
           style={styles.showMoreButton}
-          onPress={() => {
-            // Handle the button press action here
-          }}
+          onPress={allVideoNavigateTo}
         >
           <Text style={styles.showMoreText}>Show more</Text>
           <MaterialIcons

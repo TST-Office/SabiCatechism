@@ -9,6 +9,8 @@ import {
   Welcome,
   Profile,
   SearchScreen,
+  AllVideos,
+  AllBlog
 } from "../screens";
 import BottomTabNav from "./BottomTabNav";
 
@@ -70,10 +72,23 @@ const ProtectedNavigation = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+  name="AllVideos"
+  component={AllVideos}
+  options={{
+    headerShown: false,
+  }}
+/>
+<Stack.Screen
+  name="AllBlog"
+  component={AllBlog}
+  options={{
+    headerShown: false,
+  }}
+/>
     </Stack.Navigator>
   );
 };
 
-const styles = StyleSheet.create({});
 
 export default ProtectedNavigation;

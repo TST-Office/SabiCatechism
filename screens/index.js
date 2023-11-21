@@ -8,6 +8,8 @@ import Blog from "./Blog/Blog";
 import Messages from "./Messages/Messages";
 import Settings from "./Settings/Settings"
 import SearchScreen from "./Search/SearchScreen";
+import AllBlog from "./Blog/AllBlog";
+import AllVideos from "../components/videos/AllVideos";
 export {
     Login,
     Signup,
@@ -18,5 +20,7 @@ export {
     EditProfile,
     Messages,
     Settings,
-    SearchScreen
+    SearchScreen, 
+    AllBlog, 
+    AllVideos
 }
