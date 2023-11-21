@@ -4,6 +4,8 @@ import { SIZES, FONTS } from "../constants";
 import { images } from "../constants";
 import { useSelector } from "react-redux";
 import { DarkBgColors, LightBgColors } from "../constants/theme";
+import { MaterialIcons } from "@expo/vector-icons";
+import SearchSection from "./SearchSection";
 
 const HeaderSection = (props) => {
   // Access the current theme from the Redux store
@@ -32,7 +34,7 @@ const HeaderSection = (props) => {
             textTransform: "capitalize"
           }}
         >
-         Hello 
+         Welcome 
         <Text
          style={{
             fontSize: FONTS.body4.fontSize,
@@ -44,21 +46,12 @@ const HeaderSection = (props) => {
         </Text>
       </View>
       <View>
-      <TouchableOpacity onPress={props.onPress}>
-        <Image
-          style={[
-            styles.profileImage,
-            {
-              borderColor:
-                theme === "light"
-                  ? DarkBgColors.primary
-                  : LightBgColors.primary,
-            },
-          ]}
-          source={images.profile}
-          resizeMode="contain"
-        />
-        </TouchableOpacity>
+      
+      <View>
+      {/* search section component called here .. */}
+        <SearchSection />
+      </View>
+      
       </View>
     </View>
   );

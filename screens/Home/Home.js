@@ -13,7 +13,6 @@ import Carousel from "../../components/Carousel";
 import { COLORS, SIZES } from "../../constants";
 import Container from "../../components/Container";
 import HeaderSection from "../../components/HeaderSection";
-import SearchSection from "../../components/SearchSection";
 import CategorySection from "../../components/CategorySection";
 import LatestVideos from "../../components/videos/LatestVideos";
 import LatestBlogs from "../../components/Blog/LatestBlogs";
@@ -26,7 +25,6 @@ const Home = ({ navigation }) => {
   return (
     <Container>
       <HeaderSection onPress={() => navigation.navigate("Profile")} />
-      <SearchSection />
       <ScrollView>
         <CategorySection />
         <Carousel />

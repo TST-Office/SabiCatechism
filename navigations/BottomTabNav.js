@@ -74,7 +74,7 @@ const screenOptions = {
           },
         }}
       />
-
+      {/**
       <Tab.Screen
         name="Blog"
         component={Blog}
@@ -100,6 +100,7 @@ const screenOptions = {
           },
         }}
       />
+      **/}
 
       <Tab.Screen
         name="Settings"
@@ -117,6 +118,7 @@ const screenOptions = {
         }}
       />
 
+      {/**
       <Tab.Screen
         name="Profile"
         component={Profile}
@@ -132,6 +134,7 @@ const screenOptions = {
           },
         }}
       />
+      */}
     </Tab.Navigator>
   );
 };

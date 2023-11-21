@@ -18,6 +18,7 @@ const LatestBlogs = () => {
   const theme = useSelector((state) => state.theme);
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blog);
+  
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -63,16 +64,15 @@ const LatestBlogs = () => {
   };
 
   // get random blog function
-  const selectRandomBlog = () => {
+  const selectRandomBlog = (blogs) => {
     if (blogs.length > 0) {
       const randomIndex = Math.floor(Math.random() * blogs.length);
       return blogs[randomIndex];
     }
     return null;
   };
+  const suggestedBlog = selectRandomBlog(blogs);
 
-  const suggestedBlog = selectRandomBlog();
-  console.log("suggested blog", suggestedBlog);
 
   useEffect(() => {
     setIsLoading(true);
@@ -233,7 +233,7 @@ const LatestBlogs = () => {
               >
                 Trending content
               </Text>
-              <SuggestBlogComp video={suggestedBlog} />
+              <SuggestBlogComp blog={suggestedBlog} />
             </View>
           )}
         </>

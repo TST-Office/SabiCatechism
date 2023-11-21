@@ -22,25 +22,6 @@ const SearchSection = () => {
       marginHorizontal: 5,
       marginVertical: 10,
     },
-    searchWrapper: {
-      flex: 1,
-      backgroundColor: theme === "light" ? COLORS.primary : COLORS.gray,
-      marginRight: 0,
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 10,
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
-
-      height: "100%",
-    },
-    searchInput: {
-      // fontFamily: FONT.regular,
-      width: "100%",
-      height: "100%",
-      paddingHorizontal: SIZES.body1,
-      color: theme === "light" ? DarkBgColors.text : LightBgColors.text,
-    },
     searchBtn: {
       width: 50,
       height: "100%",
@@ -49,8 +30,6 @@ const SearchSection = () => {
       borderRadius: 10,
       justifyContent: "center",
       alignItems: "center",
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
       color: theme === "light" ? DarkBgColors.bgGray : LightBgColors.text,
     },
     searchBtnImage: {
@@ -62,16 +41,6 @@ const SearchSection = () => {
 
   return (
     <View style={styles.searchContainer}>
-      <View style={styles.searchWrapper}>
-        <TextInput
-          placeholder="Find latest updates ..."
-          value=""
-          placeholderTextColor={
-            theme === "light" ? DarkBgColors.text : LightBgColors.text
-          }
-          style={styles.searchInput}
-        />
-      </View>
       <TouchableOpacity style={styles.searchBtn} onPress={""}>
         <MaterialIcons
           name="search"

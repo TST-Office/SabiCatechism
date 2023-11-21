@@ -60,9 +60,7 @@ const Settings = ({ navigation }) => {
     console.log("Report a problem");
   };
 
-  const addAccount = () => {
-    console.log("Add account ");
-  };
+  
 
   const logout = () => {
     console.log("Logout");
@@ -83,7 +81,7 @@ const Settings = ({ navigation }) => {
       text: "My Subscription",
       action: navigateToSubscription,
     },
-    { icon: "help-outline", text: "Help & Support", action: navigateToSupport },
+
     
   ];
 
@@ -94,7 +92,6 @@ const Settings = ({ navigation }) => {
       text: "Report a problem",
       action: navigateToReportProblem,
     },
-    { icon: "people-outline", text: "Add Account", action: addAccount },
     { icon: "logout", text: "Log out", action: logout },
   ];
 
