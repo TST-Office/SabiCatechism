@@ -9,9 +9,16 @@ import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux"; // Import useSelector from react-redux
 import { COLORS, DarkBgColors, LightBgColors, SIZES } from "../constants/theme";
+import { useNavigation } from "@react-navigation/native";
 
 const SearchSection = () => {
   const theme = useSelector((state) => state.theme);
+  const user = useSelector((state) => state.user);
+  const navigation = useNavigation();
+
+  const handleSearchPress = () => {
+    navigation.navigate('SearchScreen');
+  }
   const styles = StyleSheet.create({
     searchContainer: {
       justifyContent: "center",
@@ -39,9 +46,11 @@ const SearchSection = () => {
     },
   });
 
+
+
   return (
     <View style={styles.searchContainer}>
-      <TouchableOpacity style={styles.searchBtn} onPress={""}>
+      <TouchableOpacity style={styles.searchBtn} onPress={handleSearchPress}>
         <MaterialIcons
           name="search"
           size={24}

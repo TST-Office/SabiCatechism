@@ -7,7 +7,7 @@ import EditProfile from "./Profile/EditProfile";
 import Blog from "./Blog/Blog";
 import Messages from "./Messages/Messages";
 import Settings from "./Settings/Settings"
-
+import SearchScreen from "./Search/SearchScreen";
 export {
     Login,
     Signup,
@@ -17,5 +17,6 @@ export {
     Blog,
     EditProfile,
     Messages,
-    Settings
+    Settings,
+    SearchScreen
 }
