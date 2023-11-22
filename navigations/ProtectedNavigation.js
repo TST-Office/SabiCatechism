@@ -12,6 +12,7 @@ import {
   AllVideos,
   AllBlog,
   PlayVideo,
+  ReadBlog,
 } from "../screens";
 import BottomTabNav from "./BottomTabNav";
 
@@ -90,6 +91,13 @@ const ProtectedNavigation = () => {
       <Stack.Screen
         name="PlayVideo"
         component={PlayVideo}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ReadBlog"
+        component={ReadBlog}
         options={{
           headerShown: false,
         }}

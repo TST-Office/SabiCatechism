@@ -48,8 +48,15 @@ const SearchScreen = () => {
   const backButtonTop = Platform.OS === "ios" ? 50 : backButtonMargin;
 
   const combinedViewComponent = ({ item }) => {
+    const navigateToContent = () => {
+      if (item.type === 'video') {
+        navigation.navigate('PlayVideo', { video: item });
+      } else if (item.type === 'blog') {
+        navigation.navigate('ReadBlog', { blog: item });
+      }
+    };
     return (
-      <TouchableOpacity style={styles.glassmorphicContainer}>
+      <TouchableOpacity onPress={navigateToContent} style={styles.glassmorphicContainer}>
         <ImageBackground
           source={{ uri: `https://api.coinstarr.org/${item?.thumbnail}` }}
           style={styles.imageBackground}
@@ -69,12 +76,12 @@ const SearchScreen = () => {
     },
     glassmorphicContainer: {
       margin: 5,
-      padding: 16,
+      padding: 5,
       borderRadius: 12,
       overflow: "hidden",
       backgroundColor: "rgba(255, 255, 255, 0.1)",
       height: 260,
-      marginBottom: 60,
+      marginBottom: 5,
     },
     imageBackground: {
       flex: 1,
@@ -140,6 +147,9 @@ const SearchScreen = () => {
       marginBottom: 18,
       color: theme === "light" ? DarkBgColors.text : DarkBgColors.tabActiveText,
     },
+    container:{
+      marginBottom: 50
+    }
   });
 
   return (

@@ -69,8 +69,11 @@ const LatestVideos = () => {
 
   // suggest a random video component
   const SuggestVideoComp = ({ video }) => {
+    const navigateToPlayVideo = () => {
+      navigation.navigate("PlayVideo", {video})
+    }
     return (
-      <TouchableOpacity onPress={""} style={styles.container}>
+      <TouchableOpacity onPress={navigateToPlayVideo} style={styles.container}>
         <ImageBackground
           source={{ uri: `https://api.coinstarr.org/${video?.thumbnail}` }}
           style={styles.imageBackground}

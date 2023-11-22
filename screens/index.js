@@ -11,6 +11,7 @@ import SearchScreen from "./Search/SearchScreen";
 import AllBlog from "./Blog/AllBlog";
 import AllVideos from "../components/videos/AllVideos";
 import PlayVideo from "./SingleVideo/PlayVideo";
+import ReadBlog from "./Blog/ReadBlog";
 export {
     Login,
     Signup,
@@ -24,5 +25,6 @@ export {
     SearchScreen, 
     AllBlog, 
     AllVideos,
-    PlayVideo
+    PlayVideo,
+    ReadBlog
 }
