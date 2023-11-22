@@ -29,8 +29,12 @@ const AllVideos = () => {
   const videos = useVideosSelector();
 
   const allVideoComponent = ({ item }) => {
+    const navigateToPlayVideo = () => {
+      navigation.navigate('PlayVideo', { video: item });
+    };
+
     return (
-      <TouchableOpacity style={styles.glassmorphicContainer}>
+      <TouchableOpacity onPress={navigateToPlayVideo} style={styles.glassmorphicContainer}>
         <ImageBackground
           source={{ uri: `https://api.coinstarr.org/${item?.thumbnail}` }}
           style={styles.imageBackground}
