@@ -27,16 +27,21 @@ const SearchScreen = () => {
   const navigation = useNavigation();
   const theme = useSelector((state) => state.theme);
   const videos = useVideosSelector();
-  const blogs = setBlogPosts();
-  const [isLoading, setIsLoading] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
+  const blogs = useSelector((state) => state.blog);
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Ensure that both videos and blogs are arrays
   const videosArray = Array.isArray(videos) ? videos : [];
   const blogsArray = Array.isArray(blogs) ? blogs : [];
 
   // Combine the arrays
-  const combinedContent = [...videosArray, ...blogsArray];
+  const combinedContent = [
+    ...videosArray.map((video) => ({ ...video, key: `video_${video.id}` })),
+    ...blogsArray.map((blog) => ({ ...blog, key: `blog_${blog.id}` })),
+  ];
+
 
   const backButtonSize = 44;
   const backButtonMargin = 30;
@@ -175,14 +180,18 @@ const SearchScreen = () => {
         {/* Render videos and blogs */}
 
         <View style={styles.container}>
-          <FlatList
-            data={combinedContent}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={combinedViewComponent}
-            style={styles.flatList}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-          />
+          {combinedContent ? (
+            <FlatList
+              data={combinedContent}
+              keyExtractor={(item) => item.key}
+              renderItem={combinedViewComponent}
+              style={styles.flatList}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+            />
+          ) : (
+            <ActivityIndicator color={"green"} size={"large"} />
+          )}
         </View>
       </View>
     </Container>

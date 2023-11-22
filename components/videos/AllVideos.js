@@ -18,13 +18,17 @@ import { useVideosSelector } from "../../components/videosSelector";
 import {
   DarkBgColors,
   LightBgColors,
-  SIZES,
-  COLORS,
 } from "../../constants/theme";
+import { API_URL, COLORS, SIZES } from "../../constants";
+
 
 
 const AllVideos = () => {
   const navigation = useNavigation();
+  const backButtonSize = 44;
+  const backButtonMargin = 30;
+  const backButtonTop = Platform.OS === "ios" ? 50 : backButtonMargin;
+
 
     return (
         <Container>
