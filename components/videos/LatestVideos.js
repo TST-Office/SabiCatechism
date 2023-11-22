@@ -21,6 +21,7 @@ import { useNavigation } from "@react-navigation/native";
 
 
 const LatestVideos = () => {
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,9 +32,16 @@ const LatestVideos = () => {
     navigation.navigate("AllVideos")
   }
 
+  
+  
+  
+
   const VideoComponent = ({ video }) => {
+    const navigateToPlayVideo = () => {
+      navigation.navigate("PlayVideo", {video})
+    }
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={navigateToPlayVideo}>
         <View style={styles.VideoContainer}>
           <ImageBackground
             source={{ uri: `https://api.coinstarr.org/${video?.thumbnail}` }}

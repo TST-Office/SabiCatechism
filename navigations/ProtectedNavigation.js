@@ -10,7 +10,8 @@ import {
   Profile,
   SearchScreen,
   AllVideos,
-  AllBlog
+  AllBlog,
+  PlayVideo,
 } from "../screens";
 import BottomTabNav from "./BottomTabNav";
 
@@ -73,22 +74,28 @@ const ProtectedNavigation = () => {
         }}
       />
       <Stack.Screen
-  name="AllVideos"
-  component={AllVideos}
-  options={{
-    headerShown: false,
-  }}
-/>
-<Stack.Screen
-  name="AllBlog"
-  component={AllBlog}
-  options={{
-    headerShown: false,
-  }}
-/>
+        name="AllVideos"
+        component={AllVideos}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="AllBlog"
+        component={AllBlog}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="PlayVideo"
+        component={PlayVideo}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
-
 
 export default ProtectedNavigation;

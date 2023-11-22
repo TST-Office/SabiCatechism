@@ -10,6 +10,7 @@ import Settings from "./Settings/Settings"
 import SearchScreen from "./Search/SearchScreen";
 import AllBlog from "./Blog/AllBlog";
 import AllVideos from "../components/videos/AllVideos";
+import PlayVideo from "./SingleVideo/PlayVideo";
 export {
     Login,
     Signup,
@@ -22,5 +23,6 @@ export {
     Settings,
     SearchScreen, 
     AllBlog, 
-    AllVideos
+    AllVideos,
+    PlayVideo
 }
