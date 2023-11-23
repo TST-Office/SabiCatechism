@@ -59,7 +59,7 @@ const LatestBlogs = () => {
       navigation.navigate("ReadBlog", { blog: blog });
     };
     return (
-      <TouchableOpacity onPress={""} style={styles.container}>
+      <TouchableOpacity onPress={navigateToReadBlog} style={styles.container}>
         <ImageBackground
           source={{ uri: `https://api.coinstarr.org/${blog?.thumbnail}` }}
           style={styles.imageBackground}
