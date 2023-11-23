@@ -6,7 +6,7 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
