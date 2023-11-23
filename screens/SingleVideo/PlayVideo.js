@@ -14,7 +14,6 @@ export default function PlayVideo() {
   const [isPlaying, setIsPlaying] = useState(false);
   useEffect(() => {
     playVideo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const playVideo = async () => {

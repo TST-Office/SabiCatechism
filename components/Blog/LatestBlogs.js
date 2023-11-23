@@ -31,8 +31,11 @@ const LatestBlogs = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const BlogComponent = ({ blog }) => {
+    const navigateToReadBlog = () => {
+      navigation.navigate("ReadBlog", { blog: blog });
+    };
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={navigateToReadBlog}>
         <View style={styles.BlogContainer}>
           <ImageBackground
             source={{ uri: `https://api.coinstarr.org/${blog?.thumbnail}` }}
@@ -52,6 +55,9 @@ const LatestBlogs = () => {
 
   // suggest a random blog component
   const SuggestBlogComp = ({ blog }) => {
+    const navigateToReadBlog = () => {
+      navigation.navigate("ReadBlog", { blog: blog });
+    };
     return (
       <TouchableOpacity onPress={""} style={styles.container}>
         <ImageBackground

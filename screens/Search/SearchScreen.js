@@ -23,6 +23,7 @@ import {
 } from "../../constants/theme";
 import { setBlogPosts } from "../../slices/blogSlice";
 
+
 const SearchScreen = () => {
   const navigation = useNavigation();
   const theme = useSelector((state) => state.theme);
@@ -38,15 +39,19 @@ const SearchScreen = () => {
 
   // Combine the arrays
   const combinedContent = [
-    ...videosArray.map((video) => ({ ...video, key: `video_${video.id}` })),
-    ...blogsArray.map((blog) => ({ ...blog, key: `blog_${blog.id}` })),
+    ...videosArray.map((video) => ({ ...video, key: `video_${video.id}`, type: 'video' })),
+    ...blogsArray.map((blog) => ({ ...blog, key: `blog_${blog.id}`, type: 'blog' })),
   ];
+  
+  
+  
 
 
   const backButtonSize = 44;
   const backButtonMargin = 30;
   const backButtonTop = Platform.OS === "ios" ? 50 : backButtonMargin;
 
+  //
   const combinedViewComponent = ({ item }) => {
     const navigateToContent = () => {
       if (item.type === 'video') {

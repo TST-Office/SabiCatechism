@@ -27,9 +27,14 @@ export default function AllBlog() {
   const backButtonSize = 44;
   const backButtonMargin = 30;
   const backButtonTop = Platform.OS === "ios" ? 50 : backButtonMargin;
+
   const allBlogComponent = ({ item }) => {
+    const navigateToReadBlog = () => {
+      navigation.navigate("ReadBlog", { blog: item });
+    };
+
     return (
-      <TouchableOpacity style={styles.glassmorphicContainer}>
+      <TouchableOpacity onPress={navigateToReadBlog} style={styles.glassmorphicContainer}>
         <ImageBackground
           source={{ uri: `https://api.coinstarr.org/${item?.thumbnail}` }}
           style={styles.imageBackground}
