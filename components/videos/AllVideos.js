@@ -15,8 +15,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useVideosSelector } from "../../components/videosSelector";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { API_URL, COLORS, SIZES } from "../../constants";
-// import { DarkBgColors, LightBgColors } from "../../constants/theme";
-// import { useVideosSelector } from "../../components/videosSelector";
 
 const AllVideos = () => {
   const theme = useSelector((state) => state.theme);

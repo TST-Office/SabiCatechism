@@ -20,18 +20,24 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { useVideosSelector } from "../../components/videosSelector";
 
 export default function PlayVideo() {
+  // fetched video
   const route = useRoute();
   const { video } = route.params;
   const videoRef = useRef(null);
+
+
   const [isPlaying, setIsPlaying] = useState(false);
+
+
   const backButtonSize = 44;
   const backButtonMargin = 30;
   const backButtonTop = Platform.OS === "ios" ? 50 : backButtonMargin;
   const theme = useSelector((state) => state.theme);
   const navigation = useNavigation();
+
+  // get all video so we can find the video with same category
   const videos = useVideosSelector();
 
-  console.log("coming from slice", videos);
 
   useEffect(() => {
     playVideo();
@@ -51,6 +57,7 @@ export default function PlayVideo() {
     }
   };
 
+  // video details components (for tab)
   const VideoDetails = () => {
     return (
       <View style={styles.tabContainer}>
@@ -79,19 +86,21 @@ export default function PlayVideo() {
     );
   };
 
+  // related views components (for tab)
   const RelatedVideos = ({item}) => {
 
-    const handlePress = (item) => {
-      // Handle the press action, e.g., navigate to the selected video
+    const handlePress = () => {
+      navigation.navigate('PlayVideo', { video: video });
+    
     };
 
     return (
       <FlatList
-        data={videos.filter((v) => v.catName === video.catName)}
+        data={videos.filter((v) => v?.catName === video?.catName)}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={""}
+            onPress={handlePress}
             style={styles.videoItem1}
           >
             <ImageBackground
@@ -121,10 +130,9 @@ export default function PlayVideo() {
     );
   };
 
+  // set values for the tab starts //
   const initialLayout = { width: SIZES.width };
-
   const [index, setIndex] = useState(0);
-
   const [routes] = useState([
     { key: "details", title: "Details" },
     { key: "related", title: "Related" },
@@ -133,7 +141,7 @@ export default function PlayVideo() {
     details: VideoDetails,
     related: RelatedVideos,
   });
-
+  // tab component itself
   const renderTabBar = (props) => (
     <TabBar
       {...props}
@@ -147,6 +155,8 @@ export default function PlayVideo() {
       }}
     />
   );
+  // set values for the tab ends //
+
   return (
     <Container>
       <View
@@ -175,6 +185,7 @@ export default function PlayVideo() {
           {video?.title}
         </Text>
       </View>
+      
       <View style={styles.container}>
         <Video
           ref={videoRef}
