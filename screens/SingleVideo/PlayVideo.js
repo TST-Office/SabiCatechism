@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,11 +7,11 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import Container from "../../components/Container";
-import { API_URL, COLORS, SIZES } from "../../constants";
+import { COLORS, SIZES } from "../../constants";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Video } from "expo-av";
@@ -19,15 +20,59 @@ import { useNavigation } from "@react-navigation/native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { useVideosSelector } from "../../components/videosSelector";
 
+// Separate VideoPlayer component
+const VideoPlayer = ({ videoUri }) => {
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const playVideoWithDelay = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Adjust the delay as needed
+      await playVideo();
+      setIsLoading(false);
+    };
+
+    playVideoWithDelay();
+  }, []);
+
+  const playVideo = async () => {
+    if (videoRef.current) {
+      await videoRef.current.playAsync();
+      setIsPlaying(true);
+    }
+  };
+
+  const pauseVideo = async () => {
+    if (videoRef.current) {
+      await videoRef.current.pauseAsync();
+      setIsPlaying(false);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator color={"green"} size={"large"} />
+      ) : (
+        <Video
+          ref={videoRef}
+          source={{ uri: videoUri }}
+          style={styles.video}
+          resizeMode="cover"
+          useNativeControls
+        />
+      )}
+    </View>
+  );
+};
+
 export default function PlayVideo() {
-  // fetched video
   const route = useRoute();
   const { video } = route.params;
   const videoRef = useRef(null);
 
-
   const [isPlaying, setIsPlaying] = useState(false);
-
 
   const backButtonSize = 44;
   const backButtonMargin = 30;
@@ -35,9 +80,8 @@ export default function PlayVideo() {
   const theme = useSelector((state) => state.theme);
   const navigation = useNavigation();
 
-  // get all video so we can find the video with same category
+  // get all videos so we can find videos with the same category
   const videos = useVideosSelector();
-
 
   useEffect(() => {
     playVideo();
@@ -61,37 +105,49 @@ export default function PlayVideo() {
   const VideoDetails = () => {
     return (
       <View style={styles.tabContainer}>
-        <Image
-          source={{ uri: `https://api.coinstarr.org/${video?.thumbnail}` }}
-          style={styles.thumbnail}
-          resizeMode="cover"
-        />
         <View style={styles.detailsContainer}>
           <Text
             style={[
               styles.title,
               {
                 color:
-                  theme === "light" ? DarkBgColors.text : LightBgColors.text,
+                  theme === "light" ? DarkBgColors.text : LightBgColors.text, fontSize: 35
               },
             ]}
           >
             {video?.title}
           </Text>
-          <Text style={styles.description}>{video?.long_description}</Text>
-          <Text style={styles.category}>{video?.catName}</Text>
-          {/* Add more details as needed */}
+          <Text
+            style={[
+              styles.description,
+              {
+                color:
+                  theme === "light" ? DarkBgColors.text : LightBgColors.text,
+              },
+            ]}
+          >
+            {video?.long_description}
+          </Text>
+          <Text
+            style={[
+              styles.category,
+              {
+                color:
+                  theme === "light" ? DarkBgColors.moon : LightBgColors.text,
+              },
+            ]}
+          >
+            {video?.catName}
+          </Text>
         </View>
       </View>
     );
   };
 
   // related views components (for tab)
-  const RelatedVideos = ({item}) => {
-
-    const handlePress = () => {
-      navigation.navigate('PlayVideo', { video: video });
-    
+  const RelatedVideos = () => {
+    const handlePress = (item) => {
+      navigation.navigate("PlayVideo", { video: item });
     };
 
     return (
@@ -100,7 +156,7 @@ export default function PlayVideo() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={handlePress}
+            onPress={() => handlePress(item)}
             style={styles.videoItem1}
           >
             <ImageBackground
@@ -120,7 +176,8 @@ export default function PlayVideo() {
                   },
                 ]}
               >
-                <Text style={styles.videoTitle1}>{item.title}</Text>
+                <Text style={[styles.videoTitle1, {color:
+  theme === "light" ? LightBgColors.text : DarkBgColors.text,fontWeight: 'bold'}]}>{item.title}</Text>
               </View>
             </ImageBackground>
           </TouchableOpacity>
@@ -185,7 +242,7 @@ export default function PlayVideo() {
           {video?.title}
         </Text>
       </View>
-      
+
       <View style={styles.container}>
         <Video
           ref={videoRef}
@@ -194,30 +251,6 @@ export default function PlayVideo() {
           resizeMode="cover"
           useNativeControls
         />
-
-        {/* Video Controls 
-        <View style={styles.controls}>
-          <TouchableOpacity onPress={isPlaying ? pauseVideo : playVideo}>
-            {!isPlaying ? (
-              <MaterialIcons
-                name="play-circle-fill"
-                size={backButtonSize}
-                color={
-                  theme === "light" ? DarkBgColors.text : LightBgColors.text
-                }
-              />
-            ) : (
-              <MaterialIcons
-                name="pause-circle-filled"
-                size={backButtonSize}
-                color={
-                  theme === "light" ? DarkBgColors.text : LightBgColors.text
-                }
-              />
-            )}
-          </TouchableOpacity>
-        </View>
-        */}
       </View>
 
       <View style={{ flex: 1, marginTop: 3 }}>
@@ -242,7 +275,6 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 16 / 9, // You can adjust the aspect ratio based on your video dimensions
   },
-
   controls: {
     marginTop: 10,
     flexDirection: "row",
@@ -276,9 +308,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontStyle: "italic",
   },
-
-
-
   videoItem1: {
     flex: 1,
     margin: 8,
@@ -303,26 +332,4 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontSize: 12,
   },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
 });
