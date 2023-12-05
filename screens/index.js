@@ -12,6 +12,7 @@ import AllBlog from "./Blog/AllBlog";
 import AllVideos from "../components/videos/AllVideos";
 import PlayVideo from "./SingleVideo/PlayVideo";
 import ReadBlog from "./Blog/ReadBlog";
+import RelatedVideoCategory from "../components/videos/RelatedVideoCategory";
 export {
     Login,
     Signup,
@@ -26,5 +27,6 @@ export {
     AllBlog, 
     AllVideos,
     PlayVideo,
-    ReadBlog
+    ReadBlog,
+    RelatedVideoCategory
 }

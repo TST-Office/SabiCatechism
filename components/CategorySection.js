@@ -12,11 +12,16 @@ import { DarkBgColors, LightBgColors } from "../constants/theme";
 import { API_URL } from "../constants";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+
 
 const CategorySection = () => {
   const theme = useSelector((state) => state.theme);
   const [activeCategoryType, setActiveCategoryType] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     fetchCategories();
@@ -35,6 +40,12 @@ const CategorySection = () => {
       console.log(error.message);
     });
   };
+
+  const handleCategoryClick = (item) => {
+    navigation.navigate("RelatedVideoCategory", {catName: item.name});
+  }
+
+
 
   const styles = StyleSheet.create({
     tabsContainer: {
@@ -65,7 +76,7 @@ const CategorySection = () => {
   return (
     <View style={styles.tabsContainer}>
       {isLoading ?  ( // Show ActivityIndicator when isLoading is true
-        <ActivityIndicator size={"large"} color={theme === "light" ?LightBgColors.primary :  COLORS.primary} />
+        <ActivityIndicator size={"large"} color={theme === "light" ? LightBgColors.primary :  COLORS.primary} />
       ) : (
         <FlatList
           data={activeCategoryType}
