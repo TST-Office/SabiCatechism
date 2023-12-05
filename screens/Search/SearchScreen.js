@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -23,15 +23,15 @@ import {
 } from "../../constants/theme";
 import { setBlogPosts } from "../../slices/blogSlice";
 
-
 const SearchScreen = () => {
   const navigation = useNavigation();
   const theme = useSelector((state) => state.theme);
   const videos = useVideosSelector();
   const blogs = useSelector((state) => state.blog);
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredContent, setFilteredContent] = useState([]);
 
   // Ensure that both videos and blogs are arrays
   const videosArray = Array.isArray(videos) ? videos : [];
@@ -39,13 +39,25 @@ const SearchScreen = () => {
 
   // Combine the arrays
   const combinedContent = [
-    ...videosArray.map((video) => ({ ...video, key: `video_${video.id}`, type: 'video' })),
-    ...blogsArray.map((blog) => ({ ...blog, key: `blog_${blog.id}`, type: 'blog' })),
+    ...videosArray.map((video) => ({
+      ...video,
+      key: `video_${video.id}`,
+      type: "video",
+    })),
+    ...blogsArray.map((blog) => ({
+      ...blog,
+      key: `blog_${blog.id}`,
+      type: "blog",
+    })),
   ];
-  
-  
-  
 
+  // filter and search the combined content by their title
+  useEffect(() => {
+    const filteredResults = combinedContent.filter((item) =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredContent(filteredResults);
+  }, [searchTerm]);
 
   const backButtonSize = 44;
   const backButtonMargin = 30;
@@ -54,14 +66,17 @@ const SearchScreen = () => {
   //
   const combinedViewComponent = ({ item }) => {
     const navigateToContent = () => {
-      if (item.type === 'video') {
-        navigation.navigate('PlayVideo', { video: item });
-      } else if (item.type === 'blog') {
-        navigation.navigate('ReadBlog', { blog: item });
+      if (item.type === "video") {
+        navigation.navigate("PlayVideo", { video: item });
+      } else if (item.type === "blog") {
+        navigation.navigate("ReadBlog", { blog: item });
       }
     };
     return (
-      <TouchableOpacity onPress={navigateToContent} style={styles.glassmorphicContainer}>
+      <TouchableOpacity
+        onPress={navigateToContent}
+        style={styles.glassmorphicContainer}
+      >
         <ImageBackground
           source={{ uri: `https://api.coinstarr.org/${item?.thumbnail}` }}
           style={styles.imageBackground}
@@ -76,6 +91,10 @@ const SearchScreen = () => {
   };
 
   const styles = StyleSheet.create({
+    noResultsText: {
+      fontSize: 16,
+      color: theme === "light" ? DarkBgColors.text : DarkBgColors.tabActiveText,
+    },
     flatList: {
       flexGrow: 0, // Ensure the FlatList doesn't grow indefinitely
     },
@@ -152,9 +171,9 @@ const SearchScreen = () => {
       marginBottom: 18,
       color: theme === "light" ? DarkBgColors.text : DarkBgColors.tabActiveText,
     },
-    container:{
-      marginBottom: 50
-    }
+    container: {
+      marginBottom: 50,
+    },
   });
 
   return (
@@ -177,6 +196,8 @@ const SearchScreen = () => {
 
       <View style={styles.searchContainer}>
         <TextInput
+          onChangeText={setSearchTerm}
+          value={searchTerm}
           style={styles.searchInput}
           placeholder="Search for videos and blogs"
           placeholderTextColor={
@@ -191,13 +212,15 @@ const SearchScreen = () => {
       <View style={styles.resultsContainer}>
         {/* Display search results here */}
         {/* For example: */}
-        <Text style={styles.resultText}>Search results for "Your Query"</Text>
+        <Text style={styles.resultText}>
+          Search results for {searchTerm.length > 0 ? `"${searchTerm}"` : ""}
+        </Text>
         {/* Render videos and blogs */}
 
         <View style={styles.container}>
-          {combinedContent ? (
+          {filteredContent.length > 0 ? (
             <FlatList
-              data={combinedContent}
+              data={filteredContent}
               keyExtractor={(item) => item.key}
               renderItem={combinedViewComponent}
               style={styles.flatList}
@@ -205,7 +228,7 @@ const SearchScreen = () => {
               showsHorizontalScrollIndicator={false}
             />
           ) : (
-            <ActivityIndicator color={"green"} size={"large"} />
+            <Text style={styles.noResultsText}>No results found</Text>
           )}
         </View>
       </View>
