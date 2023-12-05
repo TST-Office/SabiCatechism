@@ -76,7 +76,7 @@ const CategorySection = () => {
   return (
     <View style={styles.tabsContainer}>
       {isLoading ?  ( // Show ActivityIndicator when isLoading is true
-        <ActivityIndicator size={"large"} color={theme === "light" ? LightBgColors.primary :  COLORS.primary} />
+        <ActivityIndicator size={"large"} color={theme === "light" ?LightBgColors.primary :  COLORS.primary} />
       ) : (
         <FlatList
           data={activeCategoryType}
