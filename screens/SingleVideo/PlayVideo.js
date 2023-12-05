@@ -21,48 +21,28 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { useVideosSelector } from "../../components/videosSelector";
 
 // Separate VideoPlayer component
-const VideoPlayer = ({ videoUri }) => {
+const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
   const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const playVideoWithDelay = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500)); // Adjust the delay as needed
-      await playVideo();
-      setIsLoading(false);
-    };
-
-    playVideoWithDelay();
+    playVideo();
   }, []);
 
   const playVideo = async () => {
     if (videoRef.current) {
-      await videoRef.current.playAsync();
-      setIsPlaying(true);
-    }
-  };
-
-  const pauseVideo = async () => {
-    if (videoRef.current) {
-      await videoRef.current.pauseAsync();
-      setIsPlaying(false);
+      await videoRef.current.loadAsync({ uri: videoUri }, {}, false);
+      onReadyForDisplay();
     }
   };
 
   return (
     <View style={styles.container}>
-      {isLoading ? (
-        <ActivityIndicator color={"green"} size={"large"} />
-      ) : (
-        <Video
-          ref={videoRef}
-          source={{ uri: videoUri }}
-          style={styles.video}
-          resizeMode="cover"
-          useNativeControls
-        />
-      )}
+      <Video
+        ref={videoRef}
+        style={styles.video}
+        resizeMode="cover"
+        useNativeControls
+      />
     </View>
   );
 };
@@ -73,19 +53,17 @@ export default function PlayVideo() {
   const videoRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   const backButtonSize = 44;
-  const backButtonMargin = 30;
-  const backButtonTop = Platform.OS === "ios" ? 50 : backButtonMargin;
   const theme = useSelector((state) => state.theme);
   const navigation = useNavigation();
 
-  // get all videos so we can find videos with the same category
   const videos = useVideosSelector();
 
-  useEffect(() => {
-    playVideo();
-  }, []);
+  const onVideoReadyForDisplay = () => {
+    setIsVideoReady(true);
+  };
 
   const playVideo = async () => {
     if (videoRef.current) {
@@ -101,7 +79,7 @@ export default function PlayVideo() {
     }
   };
 
-  // video details components (for tab)
+  // VideoDetails component (for tab)
   const VideoDetails = () => {
     return (
       <View style={styles.tabContainer}>
@@ -111,7 +89,8 @@ export default function PlayVideo() {
               styles.title,
               {
                 color:
-                  theme === "light" ? DarkBgColors.text : LightBgColors.text, fontSize: 35
+                  theme === "light" ? DarkBgColors.text : LightBgColors.text,
+                fontSize: 35,
               },
             ]}
           >
@@ -144,7 +123,7 @@ export default function PlayVideo() {
     );
   };
 
-  // related views components (for tab)
+  // RelatedVideos component (for tab)
   const RelatedVideos = () => {
     const handlePress = (item) => {
       navigation.navigate("PlayVideo", { video: item });
@@ -176,8 +155,20 @@ export default function PlayVideo() {
                   },
                 ]}
               >
-                <Text style={[styles.videoTitle1, {color:
-  theme === "light" ? LightBgColors.text : DarkBgColors.text,fontWeight: 'bold'}]}>{item.title}</Text>
+                <Text
+                  style={[
+                    styles.videoTitle1,
+                    {
+                      color:
+                        theme === "light"
+                          ? LightBgColors.text
+                          : DarkBgColors.text,
+                      fontWeight: "bold",
+                    },
+                  ]}
+                >
+                  {item.title}
+                </Text>
               </View>
             </ImageBackground>
           </TouchableOpacity>
@@ -243,15 +234,10 @@ export default function PlayVideo() {
         </Text>
       </View>
 
-      <View style={styles.container}>
-        <Video
-          ref={videoRef}
-          source={{ uri: `https://api.coinstarr.org/${video?.video}` }}
-          style={styles.video}
-          resizeMode="cover"
-          useNativeControls
-        />
-      </View>
+      <VideoPlayer
+        videoUri={`https://api.coinstarr.org/${video?.video}`}
+        onReadyForDisplay={onVideoReadyForDisplay}
+      />
 
       <View style={{ flex: 1, marginTop: 3 }}>
         <TabView
@@ -273,12 +259,7 @@ const styles = StyleSheet.create({
   },
   video: {
     width: "100%",
-    aspectRatio: 16 / 9, // You can adjust the aspect ratio based on your video dimensions
-  },
-  controls: {
-    marginTop: 10,
-    flexDirection: "row",
-    justifyContent: "center",
+    aspectRatio: 16 / 9,
   },
   tabContainer: {
     flexDirection: "row",
@@ -286,10 +267,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     margin: 10,
     marginTop: 30,
-  },
-  thumbnail: {
-    width: 120,
-    height: 100,
   },
   detailsContainer: {
     flex: 1,
@@ -332,4 +309,5 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontSize: 12,
   },
+  // ... (your other styles)
 });
