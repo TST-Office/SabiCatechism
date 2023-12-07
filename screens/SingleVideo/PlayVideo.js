@@ -47,6 +47,8 @@ const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
   );
 };
 
+
+
 export default function PlayVideo() {
   const route = useRoute();
   const { video } = route.params;
