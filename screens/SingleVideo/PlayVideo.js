@@ -15,10 +15,11 @@ import { COLORS, SIZES } from "../../constants";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Video } from "expo-av";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { useVideosSelector } from "../../components/videosSelector";
+import { addWatchedVideo } from "../../slices/watchedVideosSlice";
 
 // Separate VideoPlayer component
 const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
@@ -30,7 +31,15 @@ const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
 
   const playVideo = async () => {
     if (videoRef.current) {
-      await videoRef.current.loadAsync({ uri: videoUri }, {}, false);
+      try {
+        if (videoRef.current) {
+          await videoRef.current.playAsync();
+          setIsPlaying(true);
+        }
+      } catch (error) {
+        console.error("Error playing video:", error);
+      }
+      
       onReadyForDisplay();
     }
   };
@@ -50,6 +59,9 @@ const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
 
 
 export default function PlayVideo() {
+  const dispatch = useDispatch();
+  const watchedVideos = useSelector((state) => state.watchedVideos);
+
   const route = useRoute();
   const { video } = route.params;
   const videoRef = useRef(null);
@@ -65,6 +77,16 @@ export default function PlayVideo() {
 
   const onVideoReadyForDisplay = () => {
     setIsVideoReady(true);
+
+  // Check if the video is not already in the watchedVideos array
+  const isVideoAlreadyWatched = watchedVideos.some(
+    (watchedVideo) => watchedVideo.id === video.id
+  );
+
+  if (!isVideoAlreadyWatched) {
+    dispatch(addWatchedVideo(video));
+  }
+
   };
 
   const playVideo = async () => {
