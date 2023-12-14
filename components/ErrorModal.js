@@ -31,10 +31,12 @@ const ErrorModal = (props) => {
         onPress={() => props.hideErrorOverlay(false)}
         style={{
           marginTop: 22,
-          width: "100%",
-          color: COLORS.black,
+          width: "50%",
+          color: "white",
           backgroundColor: colors.error,
-          borderColor: COLORS.black
+          borderColor: COLORS.white,
+          alignSelf: "center",
+          justifyContent: "center"
         }}
       />
     </Overlay>
@@ -67,6 +69,7 @@ const styles = StyleSheet.create({
   textSecondary: {
     marginTop: 20,
     textAlign: "center",
+    color: "#ddd"
   },
   btnError: {
     backgroundColor: colors.bgError,
@@ -81,6 +84,11 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: SIZES.body2,
   },
+  textPrimary:{
+    color: "#fdfdfd",
+    fontSize: 20,
+    fontFamily: "semiBold"
+  }
 });
 
 export default ErrorModal;

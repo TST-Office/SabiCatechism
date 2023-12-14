@@ -23,40 +23,41 @@ import { addWatchedVideo } from "../../slices/watchedVideosSlice";
 
 // Separate VideoPlayer component
 const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
+
+  const playVideo = async () => {
+    try {
+      if (videoRef.current) {
+        await videoRef.current.playAsync();
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.error("Error playing video:", error);
+    }
+
+    onReadyForDisplay();
+  };
 
   useEffect(() => {
     playVideo();
   }, []);
-
-  const playVideo = async () => {
-    if (videoRef.current) {
-      try {
-        if (videoRef.current) {
-          await videoRef.current.playAsync();
-          setIsPlaying(true);
-        }
-      } catch (error) {
-        console.error("Error playing video:", error);
-      }
-      
-      onReadyForDisplay();
-    }
-  };
 
   return (
     <View style={styles.container}>
       <Video
         ref={videoRef}
         style={styles.video}
+        source={{ uri: videoUri }}
         resizeMode="cover"
         useNativeControls
+        onPlaybackStatusUpdate={(status) => {
+          // Handle playback status if needed
+        }}
       />
     </View>
   );
 };
-
-
 
 export default function PlayVideo() {
   const dispatch = useDispatch();
@@ -78,15 +79,14 @@ export default function PlayVideo() {
   const onVideoReadyForDisplay = () => {
     setIsVideoReady(true);
 
-  // Check if the video is not already in the watchedVideos array
-  const isVideoAlreadyWatched = watchedVideos.some(
-    (watchedVideo) => watchedVideo.id === video.id
-  );
+    // Check if the video is not already in the watchedVideos array
+    const isVideoAlreadyWatched = watchedVideos.some(
+      (watchedVideo) => watchedVideo.id === video.id
+    );
 
-  if (!isVideoAlreadyWatched) {
-    dispatch(addWatchedVideo(video));
-  }
-
+    if (!isVideoAlreadyWatched) {
+      dispatch(addWatchedVideo(video));
+    }
   };
 
   const playVideo = async () => {
