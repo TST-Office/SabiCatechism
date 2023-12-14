@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const Messages = () => {
   const watchedVideos = useSelector((state) => state.watchedVideos);
-  // console.log("wateched videos", watchedVideos);
+  console.log("wATCHED videos", watchedVideos);
   const navigation = useNavigation();
   const theme = useSelector((state) => state.theme);
 

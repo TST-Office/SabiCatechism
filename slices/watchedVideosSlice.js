@@ -6,7 +6,7 @@ const watchedVideosSlice = createSlice({
   initialState: [],
   reducers: {
     addWatchedVideo: (state, action) => {
-      return action.payload
+      return [...state, action.payload];
     },
   },
 });
