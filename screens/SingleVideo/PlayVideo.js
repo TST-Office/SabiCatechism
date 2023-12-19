@@ -26,22 +26,20 @@ const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
 
-  const playVideo = async () => {
-    try {
-      if (videoRef.current) {
-        await videoRef.current.playAsync();
-        setIsPlaying(true);
-      }
-    } catch (error) {
-      console.error("Error playing video:", error);
-    }
-
-    onReadyForDisplay();
-  };
 
   useEffect(() => {
+    const playVideo = async () => {
+      try {
+        if (videoRef.current){
+          await videoRef.current.playAsync();
+        }
+      }catch (error){
+        console.error("Error playing video", error)
+      }
+    };
     playVideo();
-  }, []);
+  }, [])
+
 
   return (
     <View style={styles.container}>
@@ -52,7 +50,9 @@ const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
         resizeMode="cover"
         useNativeControls
         onPlaybackStatusUpdate={(status) => {
-          // Handle playback status if needed
+          if (status.isLoaded && status.isPlaying) {
+            onReadyForDisplay();
+          }
         }}
       />
     </View>
@@ -65,6 +65,7 @@ export default function PlayVideo() {
 
   const route = useRoute();
   const { video } = route.params;
+  console.log("video detail: ", video.id)
   const videoRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -79,28 +80,29 @@ export default function PlayVideo() {
   const onVideoReadyForDisplay = () => {
     setIsVideoReady(true);
 
-    // Check if the video is not already in the watchedVideos array
-    const isVideoAlreadyWatched = watchedVideos.some(
-      (watchedVideo) => watchedVideo.id === video.id
-    );
-
-    if (!isVideoAlreadyWatched) {
-      dispatch(addWatchedVideo(video));
-    }
+    dispatch(addWatchedVideo(video));
   };
 
   const playVideo = async () => {
-    if (videoRef.current) {
-      await videoRef.current.playAsync();
-      setIsPlaying(true);
+    try {
+      if (videoRef.current) {
+        await videoRef.current.playAsync();
+        setIsPlaying(true);
+      }
+    }catch (e) {
+      console.error("error to click play video: ", e)
     }
   };
 
   const pauseVideo = async () => {
-    if (videoRef.current) {
-      await videoRef.current.pauseAsync();
-      setIsPlaying(false);
-    }
+   try {
+     if (videoRef.current) {
+       await videoRef.current.pauseAsync();
+       setIsPlaying(false);
+     }
+   }catch (e) {
+     console.error("error to pause video: ", e)
+   }
   };
 
   // VideoDetails component (for tab)
@@ -141,12 +143,14 @@ export default function PlayVideo() {
             ]}
           >
             {video?.catName}
+
           </Text>
         </View>
       </View>
     );
   };
 
+  
   // RelatedVideos component (for tab)
   const RelatedVideos = () => {
     const handlePress = (item) => {
@@ -258,6 +262,9 @@ export default function PlayVideo() {
         </Text>
       </View>
 
+      {!isVideoReady && (
+          <ActivityIndicator size={"large"} color={COLORS.primary} />
+      )}
       <VideoPlayer
         videoUri={`https://api.coinstarr.org/${video?.video}`}
         onReadyForDisplay={onVideoReadyForDisplay}

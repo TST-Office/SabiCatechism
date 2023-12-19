@@ -1,4 +1,3 @@
-// watchedVideosSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const watchedVideosSlice = createSlice({
@@ -6,7 +5,10 @@ const watchedVideosSlice = createSlice({
   initialState: [],
   reducers: {
     addWatchedVideo: (state, action) => {
-      return [...state, action.payload];
+      const isVideoExist = state.find(video => video.id === action.payload.id);
+      if (!isVideoExist) {
+        return [...state, action.payload];        
+      }
     },
   },
 });
