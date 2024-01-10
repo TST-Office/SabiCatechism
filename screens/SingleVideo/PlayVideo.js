@@ -32,6 +32,8 @@ const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
       try {
         if (videoRef.current){
           await videoRef.current.playAsync();
+          // await videoRef.current.playAsync();
+          setIsPlaying(true);
         }
       }catch (error){
         console.error("Error playing video", error)
@@ -61,11 +63,11 @@ const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
 
 export default function PlayVideo() {
   const dispatch = useDispatch();
-  const watchedVideos = useSelector((state) => state.watchedVideos);
+  // const watchedVideos = useSelector((state) => state.watchedVideos);
 
   const route = useRoute();
   const { video } = route.params;
-  console.log("video detail: ", video.id)
+  console.log("video detail: ", video)
   const videoRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);

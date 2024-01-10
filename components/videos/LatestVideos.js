@@ -18,7 +18,7 @@ import { useVideosSelector } from "../videosSelector";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-
+import { FileSystem } from 'expo-file-system';
 
 const LatestVideos = () => {
   const user = useSelector((state) => state.user);
@@ -32,13 +32,13 @@ const LatestVideos = () => {
     navigation.navigate("AllVideos")
   }
 
-  
-  
-  
+
+
+
 
   const VideoComponent = ({ video }) => {
     const navigateToPlayVideo = () => {
-      navigation.navigate("PlayVideo", {video})
+      navigation.navigate("PlayVideo", { video })
     }
     return (
       <TouchableOpacity onPress={navigateToPlayVideo}>
@@ -70,7 +70,7 @@ const LatestVideos = () => {
   // suggest a random video component
   const SuggestVideoComp = ({ video }) => {
     const navigateToPlayVideo = () => {
-      navigation.navigate("PlayVideo", {video})
+      navigation.navigate("PlayVideo", { video })
     }
     return (
       <TouchableOpacity onPress={navigateToPlayVideo} style={styles.container}>
@@ -90,7 +90,7 @@ const LatestVideos = () => {
       </TouchableOpacity>
     );
   };
-  
+
   // get a random video function
   const selectRandomVideo = () => {
     if (videos.length > 0) {
@@ -102,21 +102,62 @@ const LatestVideos = () => {
   const suggestedVideo = selectRandomVideo(); // Get a random video
   console.log("suggested video", suggestedVideo);
 
+
+
+
+
+
   useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(`${API_URL}/allvideo`)
-      .then((response) => {
+    const loadVideos = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/allvideo`);
+
         if (response.data) {
           setIsLoading(false);
-          // set video details to redux
+
+          // Cache video details in Redux
           dispatch(setVideos(response.data));
+
+          // Create a directory for video caching
+          const cacheDirectory = `${FileSystem.cacheDirectory}videos/`;
+          const directoryInfo = await FileSystem.getInfoAsync(cacheDirectory);
+
+          if (!directoryInfo.exists) {
+            // Create the directory only if it doesn't exist
+            await FileSystem.makeDirectoryAsync(cacheDirectory, { intermediates: true });
+          }
+
+          // Cache videos locally using expo-file-system
+          await Promise.all(
+            response.data.map(async (video) => {
+              const videoUri = `https://api.coinstarr.org/${video?.video}`;
+              const localUri = `${cacheDirectory}${video?.id}.mp4`;
+
+              const fileInfo = await FileSystem.getInfoAsync(localUri);
+
+              if (!fileInfo.exists) {
+                // Download the video only if it's not cached
+                await FileSystem.downloadAsync(videoUri, localUri);
+              }
+
+              // Update the localUri in Redux state
+              dispatch(updateVideoLocalUri({ videoId: video?.id, localUri }));
+            })
+          );
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log(error.message);
-      });
+      }
+    };
+
+    loadVideos();
+
   }, [dispatch]);
+
+
+
+
+
 
   const styles = StyleSheet.create({
     image: {
@@ -227,6 +268,8 @@ const LatestVideos = () => {
       textAlign: "center",
     },
   });
+
+
   return (
     <View style={{ marginTop: 15, paddingHorizontal: 10 }}>
       <View
