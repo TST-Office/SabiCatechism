@@ -113,12 +113,13 @@ const Login = ({ navigation }) => {
 
   // run all validation function
   const validateInput = (isUser, password) => {
-    console.log("validate function pinged", isUser, password);
 
     if (isEmptyOrUndefined(isUser) || isEmptyOrUndefined(password)) {
       setErrMessage("All fields are required!!");
       return setDisplayModalErr(true);
     }
+
+
 
     if (isValidEmail(isUser)) {
       if (!isValidEmailFormat(isUser)) {
@@ -230,7 +231,7 @@ const Login = ({ navigation }) => {
             <TextInput
               placeholder="Enter your password"
               placeholderTextColor={COLORS.black}
-              secureTextEntry={isPasswordShown}
+              secureTextEntry={!isPasswordShown}
               onChangeText={passwordChange}
               value={password}
               style={{

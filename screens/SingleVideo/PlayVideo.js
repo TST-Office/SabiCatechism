@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import Container from "../../components/Container";
-import { COLORS, SIZES } from "../../constants";
+import { COLORS, SIZES, API_URL } from "../../constants";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Video } from "expo-av";
@@ -21,8 +21,10 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { useVideosSelector } from "../../components/videosSelector";
 import { addWatchedVideo } from "../../slices/watchedVideosSlice";
 
+
 // Separate VideoPlayer component
 const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
+  
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
 
@@ -63,11 +65,11 @@ const VideoPlayer = ({ videoUri, onReadyForDisplay }) => {
 
 export default function PlayVideo() {
   const dispatch = useDispatch();
-  // const watchedVideos = useSelector((state) => state.watchedVideos);
 
   const route = useRoute();
   const { video } = route.params;
-  console.log("video detail: ", video)
+
+
   const videoRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -258,7 +260,10 @@ export default function PlayVideo() {
           style={{
             color: theme === "light" ? DarkBgColors.text : LightBgColors.text,
             fontSize: 24,
+            maxWidth: '70%', // Adjust the maximum width as needed
           }}
+          numberOfLines={1}
+          ellipsizeMode="tail"
         >
           {video?.title}
         </Text>

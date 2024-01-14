@@ -38,6 +38,8 @@ const ErrorModal = (props) => {
           alignSelf: "center",
           justifyContent: "center"
         }}
+        titleStyle={{ color: 'white' }} 
+
       />
     </Overlay>
   );

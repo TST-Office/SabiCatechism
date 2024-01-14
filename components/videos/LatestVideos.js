@@ -18,7 +18,9 @@ import { useVideosSelector } from "../videosSelector";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { FileSystem } from 'expo-file-system';
+// import { FileSystem } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system';
+import * as blobUtil from 'blob-util';
 
 const LatestVideos = () => {
   const user = useSelector((state) => state.user);
@@ -102,62 +104,62 @@ const LatestVideos = () => {
   const suggestedVideo = selectRandomVideo(); // Get a random video
   console.log("suggested video", suggestedVideo);
 
-
-
-
-
-
   useEffect(() => {
     const loadVideos = async () => {
       try {
         const response = await axios.get(`${API_URL}/allvideo`);
-
+  
         if (response.data) {
           setIsLoading(false);
-
+          const fetchedVideos = response.data;
+          // console.log("VIDEOS VIDEOS: ", fetchedVideos);
+  
+          // const videosWithLocalUri = await Promise.all(
+          //   fetchedVideos.map(async (video) => {
+          //     const videoUri = `${API_URL}/video/${video?.id}`;
+          //     const localUri = FileSystem.documentDirectory + `${video?.video}`;
+          //     // console.log("LOCAL URI", localUri);
+  
+          //     const fileInfo = await FileSystem.getInfoAsync(localUri);
+          //     console.log("file Information", fileInfo);
+  
+          //     if (!(fileInfo.exists)) {
+          //       const videoResponse = await axios.get(videoUri);
+          //       const base64Video = videoResponse.data[0].video;
+  
+          //       // Convert Base64 to Blob
+          //       const blob = blobUtil.base64StringToBlob(base64Video);
+          //       console.log("SINGLE VIDEO RESPONSE: ", blob);
+              
+  
+          //       try {
+          //         await FileSystem.writeAsStringAsync(localUri, blob, {
+          //           encoding: FileSystem.EncodingType.Base64,
+          //         });
+          //       } catch (error) {
+          //         console.error('Error writing file:', error);
+          //       }
+          //     }
+  
+          //     // Return an object with both video details and localUri
+          //     return {
+          //       ...video,
+          //       localUri: FileSystem.documentDirectory + `${video?.video}`,
+          //     };
+          //   })
+          // );
+  
           // Cache video details in Redux
           dispatch(setVideos(response.data));
-
-          // Create a directory for video caching
-          const cacheDirectory = `${FileSystem.cacheDirectory}videos/`;
-          const directoryInfo = await FileSystem.getInfoAsync(cacheDirectory);
-
-          if (!directoryInfo.exists) {
-            // Create the directory only if it doesn't exist
-            await FileSystem.makeDirectoryAsync(cacheDirectory, { intermediates: true });
-          }
-
-          // Cache videos locally using expo-file-system
-          await Promise.all(
-            response.data.map(async (video) => {
-              const videoUri = `https://api.coinstarr.org/${video?.video}`;
-              const localUri = `${cacheDirectory}${video?.id}.mp4`;
-
-              const fileInfo = await FileSystem.getInfoAsync(localUri);
-
-              if (!fileInfo.exists) {
-                // Download the video only if it's not cached
-                await FileSystem.downloadAsync(videoUri, localUri);
-              }
-
-              // Update the localUri in Redux state
-              dispatch(updateVideoLocalUri({ videoId: video?.id, localUri }));
-            })
-          );
         }
       } catch (error) {
         console.log(error.message);
       }
     };
-
+  
     loadVideos();
-
   }, [dispatch]);
-
-
-
-
-
+  
 
   const styles = StyleSheet.create({
     image: {

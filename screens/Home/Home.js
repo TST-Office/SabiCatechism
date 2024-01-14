@@ -16,11 +16,14 @@ import HeaderSection from "../../components/HeaderSection";
 import CategorySection from "../../components/CategorySection";
 import LatestVideos from "../../components/videos/LatestVideos";
 import LatestBlogs from "../../components/Blog/LatestBlogs";
+import { useVideosSelector } from "../../components/videosSelector";
 
 const Home = ({ navigation }) => {
   // const user = useSelector((state) => state.user);
-  // console.log("check if user details was persisted with user details", user.userDetails);
+  // console.log("check if user details was persisted with user details", user.user);
   // console.log("check if user details was persisted with user", user.user.created_at);
+  const videos = useVideosSelector();
+  // console.log("PERSISTED VIDEOS: ", videos.localUri);
 
   return (
     <Container>
