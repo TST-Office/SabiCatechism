@@ -8,6 +8,8 @@ import * as Device from 'expo-device'
 import axios from "axios";
 import ErrorModal from "../../components/ErrorModal";
 import FormSuccess from "../../components/FormSuccess";
+import { API_URL } from "../../constants";
+
 
 const Signup = ({ navigation }) => {
     const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -145,8 +147,55 @@ const Signup = ({ navigation }) => {
         handleEmailValidation(email);
         handleUsernameValidation(username);
         handleNameValidation(name);
+        registerUser();
 
     }
+
+    const registerUser = () => {
+        setIsLoading(true);
+        axios
+          .post(`${API_URL}/register`, {
+            username: username,
+            name: name,
+            email: email,
+            password: password,
+            devicename: Device.modelName,
+          })
+          .then((response) => {
+            console.log("request sent", response.data);
+            if (response.data.status === true) {
+              setIsLoading(false)
+              setSuccessMessage("Signup successful")
+              setUsername("")
+              setName("")
+              setEmail("")
+              setPassword("")
+              setConfirmPassword("")
+              console.log("Registration successful: ", response.data.user);
+    
+              // set user details fetched from the api
+            //   const userData = {
+            //     id: response.data.username.id,
+            //     userDetails: response.data,
+            //     user: response.data.username
+            //   }
+            //   // persist the user details
+            //   dispatch(setUser(userData))
+    
+            }
+            if (response.data.status === false) {
+              setIsLoading(false);
+              setErrMessage(response.data.message);
+              return setDisplayModalErr(true);
+            }
+          })
+          .catch((error) => {
+            setIsLoading(false);
+              setErrMessage(error.message);
+              return setDisplayModalErr(true);
+            console.log("registration error code: ", error.message);
+          });
+      };
 
 
     return (
@@ -378,11 +427,11 @@ const Signup = ({ navigation }) => {
 
             {isLoading === true ? (
                 <FormSuccess />
-            ) : successMessage == "Registration successful" ? (
+            ) : successMessage == "Signup successful" ? (
                 <FormSuccess
                     successMessage={successMessage}
                     close={setSuccessMessage}
-                    onPress={() => navigation.navigate("BottomTabNavigation")}
+                    onPress={() => navigation.navigate("Login")}
                 />
             ) : null}
         </SafeAreaView>
