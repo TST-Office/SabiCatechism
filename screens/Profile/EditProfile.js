@@ -14,107 +14,126 @@ import { COLORS, FONTS } from "../../constants";
 import { MaterialIcons } from "@expo/vector-icons";
 import { imagesDataURL } from "../../constants/data";
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
+import { useSelector } from "react-redux";
+import Container from "../../components/Container";
+import * as Device from 'expo-device'
+import axios from "axios";
+import ErrorModal from "../../components/ErrorModal";
+import FormSuccess from "../../components/FormSuccess";
+import { API_URL } from "../../constants";
+
+
 
 const EditProfile = ({ navigation }) => {
-  const [selectedImage, setSelectedImage] = useState(imagesDataURL[0]);
-  const [name, setName] = useState("Melissa Peters");
-  const [email, setEmail] = useState("metperters@gmail.com");
-  const [password, setPassword] = useState("randompassword");
-  const [country, setCountry] = useState("Nigeria");
+  const user = useSelector((state) => state.user);
 
-  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-  const today = new Date();
-  const startDate = getFormatedDate(
-    today.setDate(today.getDate() + 1),
-    "YYYY/MM/DD"
-  );
-  const [selectedStartDate, setSelectedStartDate] = useState("01/01/1990");
-  const [startedDate, setStartedDate] = useState("12/12/2023");
+  const [name, setName] = useState(user.user.name);
+  const [username, setUsername] = useState(user.user.username);
+  const [email, setEmail] = useState(user.user.email);
+  const [userId, setUserId] = useState(user.user.id);
 
-  const handleChangeStartDate = (propDate) => {
-    setStartedDate(propDate);
-  };
+  
+  const [successMessage, setSuccessMessage] = useState(false);
+  const [errMessage, setErrMessage] = useState(false);
 
-  const handleOnPressStartDate = () => {
-    setOpenStartDatePicker(!openStartDatePicker);
-  };
+  const [displayModalSuccess, setDisplayModalSuccess] = useState(false);
+  const [displayModalErr, setDisplayModalErr] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleImageSelection = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 4],
-      quality: 1,
-    });
 
-    console.log(result);
+      // check if value is empty or undefined
+      const isEmptyOrUndefined = (value) => {
+        return value === "" || value === undefined;
+    };
 
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-    }
-  };
+    // check if its a valid email
+    const isValidEmail = (value) => {
+        return value.includes("@");
+    };
 
-  function renderDatePicker() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={openStartDatePicker}
-      >
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <View
-            style={{
-              margin: 20,
-              backgroundColor: COLORS.primary,
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 20,
-              padding: 35,
-              width: "90%",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5,
-            }}
-          >
-            <DatePicker
-              mode="calendar"
-              minimumDate={startDate}
-              selected={startedDate}
-              onDateChanged={handleChangeStartDate}
-              onSelectedChange={(date) => setSelectedStartDate(date)}
-              options={{
-                backgroundColor: COLORS.primary,
-                textHeaderColor: "#469ab6",
-                textDefaultColor: COLORS.white,
-                selectedTextColor: COLORS.white,
-                mainColor: "#469ab6",
-                textSecondaryColor: COLORS.white,
-                borderColor: "rgba(122,146,165,0.1)",
-              }}
-            />
+    // check if its a valid email format
+    const isValidEmailFormat = (email) => {
+        const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+        return emailRegex.test(email);
+    };
+    // is valid name
+    const isValidName = (value) => {
+        // Allow letters, spaces, and hyphens
+        return /^[a-zA-Z\s-]+$/.test(value);
+    };
 
-            <TouchableOpacity onPress={handleOnPressStartDate}>
-              <Text style={{ ...FONTS.body3, color: COLORS.white }}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    );
+    // is valid name format
+    const isValidNameFormat = (name) => {
+        // Allow letters, spaces, and hyphens
+        const nameRegex = /^[a-zA-Z\s-]+$/;
+        return nameRegex.test(name);
+    };
+
+    // is valid username
+    const isValidUsername = (value) => {
+        return value.match(/^[a-zA-Z0-9_]+$/);
+    };
+
+
+    // is valid username format
+    const isValidUsernameFormat = (username) => {
+        const usernameRegex = /^[a-zA-Z0-9_]+$/;
+        return usernameRegex.test(username);
+    };
+    // validate email
+    const handleEmailValidation = (email) => {
+        if (isValidEmail(email)) {
+            if (!isValidEmailFormat(email)) {
+                setErrMessage("Invalid email format!");
+                return setDisplayModalErr(true);
+            }
+        } else {
+            setErrMessage("Invalid email!");
+            return setDisplayModalErr(true);
+        }
+    };
+
+    const handleUsernameValidation = (username) => {
+        if (isValidUsername(username)) {
+            if (!isValidUsernameFormat(username)) {
+                setErrMessage("Invalid username format!");
+                return setDisplayModalErr(true);
+            }
+        } else {
+            setErrMessage("Invalid username!");
+            return setDisplayModalErr(true);
+        }
+    };
+    const handleNameValidation = (name) => {
+        if (isValidName(name)) {
+            if (!isValidNameFormat(name)) {
+                setErrMessage("Invalid name format!");
+                return setDisplayModalErr(true);
+            }
+        } else {
+            setErrMessage("Invalid name!");
+            return setDisplayModalErr(true);
+        }
+    };
+
+    const validateInput = (username, name, email) => {
+      if (isEmptyOrUndefined(username) || isEmptyOrUndefined(name) || isEmptyOrUndefined(email)) {
+          setErrMessage("All fields are required!!");
+          return setDisplayModalErr(true);
+      }
+    
+      handleEmailValidation(email);
+      handleUsernameValidation(username);
+      handleNameValidation(name);
+      // registerUser();
+
   }
 
+ 
+
+ 
   return (
-    <SafeAreaView
+    <Container
       style={{
         flex: 1,
         backgroundColor: COLORS.white,
@@ -126,6 +145,7 @@ const EditProfile = ({ navigation }) => {
           marginHorizontal: 12,
           flexDirection: "row",
           justifyContent: "center",
+          marginTop: 30
         }}
       >
         <TouchableOpacity
@@ -146,42 +166,9 @@ const EditProfile = ({ navigation }) => {
       </View>
 
       <ScrollView>
-        <View
-          style={{
-            alignItems: "center",
-            marginVertical: 22,
-          }}
-        >
-          <TouchableOpacity onPress={handleImageSelection}>
-            <Image
-              source={{ uri: selectedImage }}
-              style={{
-                height: 170,
-                width: 170,
-                borderRadius: 85,
-                borderWidth: 2,
-                borderColor: COLORS.primary,
-              }}
-            />
+       
 
-            <View
-              style={{
-                position: "absolute",
-                bottom: 0,
-                right: 10,
-                zIndex: 9999,
-              }}
-            >
-              <MaterialIcons
-                name="photo-camera"
-                size={32}
-                color={COLORS.primary}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View>
+        <View style={{marginTop: 50}}>
           <View
             style={{
               flexDirection: "column",
@@ -204,6 +191,32 @@ const EditProfile = ({ navigation }) => {
               <TextInput
                 value={name}
                 onChangeText={(value) => setName(value)}
+                editable={true}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: "column",
+              marginBottom: 6,
+            }}
+          >
+            <Text style={{ ...FONTS.h4 }}>Username</Text>
+            <View
+              style={{
+                height: 44,
+                width: "100%",
+                borderColor: COLORS.secondaryGray,
+                borderWidth: 1,
+                borderRadius: 4,
+                marginVertical: 6,
+                justifyContent: "center",
+                paddingLeft: 8,
+              }}
+            >
+              <TextInput
+                value={username}
+                onChangeText={(value) => setUsername(value)}
                 editable={true}
               />
             </View>
@@ -236,84 +249,8 @@ const EditProfile = ({ navigation }) => {
             </View>
           </View>
 
-          <View
-            style={{
-              flexDirection: "column",
-              marginBottom: 6,
-            }}
-          >
-            <Text style={{ ...FONTS.h4 }}>Password</Text>
-            <View
-              style={{
-                height: 44,
-                width: "100%",
-                borderColor: COLORS.secondaryGray,
-                borderWidth: 1,
-                borderRadius: 4,
-                marginVertical: 6,
-                justifyContent: "center",
-                paddingLeft: 8,
-              }}
-            >
-              <TextInput
-                value={password}
-                onChangeText={(value) => setPassword(value)}
-                editable={true}
-                secureTextEntry
-              />
-            </View>
-          </View>
+       
 
-          <View
-            style={{
-              flexDirection: "column",
-              marginBottom: 6,
-            }}
-          >
-            <Text style={{ ...FONTS.h4 }}>Date or Birth</Text>
-            <TouchableOpacity
-              onPress={handleOnPressStartDate}
-              style={{
-                height: 44,
-                width: "100%",
-                borderColor: COLORS.secondaryGray,
-                borderWidth: 1,
-                borderRadius: 4,
-                marginVertical: 6,
-                justifyContent: "center",
-                paddingLeft: 8,
-              }}
-            >
-              <Text>{selectedStartDate}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View
-          style={{
-            flexDirection: "column",
-            marginBottom: 6,
-          }}
-        >
-          <Text style={{ ...FONTS.h4 }}>Country</Text>
-          <View
-            style={{
-              height: 44,
-              width: "100%",
-              borderColor: COLORS.secondaryGray,
-              borderWidth: 1,
-              borderRadius: 4,
-              marginVertical: 6,
-              justifyContent: "center",
-              paddingLeft: 8,
-            }}
-          >
-            <TextInput
-              value={country}
-              onChangeText={(value) => setCountry(value)}
-              editable={true}
-            />
-          </View>
         </View>
 
         <TouchableOpacity
@@ -324,6 +261,7 @@ const EditProfile = ({ navigation }) => {
             alignItems: "center",
             justifyContent: "center",
           }}
+          onPress={() => validateInput(username, name, email)}
         >
           <Text
             style={{
@@ -334,10 +272,22 @@ const EditProfile = ({ navigation }) => {
             Save Change
           </Text>
         </TouchableOpacity>
+        {displayModalErr === true ? (
+                <ErrorModal hideErrorOverlay={setDisplayModalErr} err={errMessage} />
+            ) : null}
 
-        {renderDatePicker()}
+            {isLoading === true ? (
+                <FormSuccess />
+            ) : successMessage == "Signup successful" ? (
+                <FormSuccess
+                    successMessage={successMessage}
+                    close={setSuccessMessage}
+                    onPress={() => navigation.navigate("Login")}
+                />
+            ) : null}
       </ScrollView>
-    </SafeAreaView>
+
+    </Container>
   );
 };
 
