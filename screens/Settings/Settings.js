@@ -39,7 +39,7 @@ const Settings = ({ navigation }) => {
   };
 
   const navigateToSubscription = () => {
-    console.log("Subscription function");
+    navigation.navigate('Subscription');
   };
 
   const navigateToSupport = () => {

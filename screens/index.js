@@ -13,7 +13,9 @@ import AllVideos from "../components/videos/AllVideos";
 import PlayVideo from "./SingleVideo/PlayVideo";
 import ReadBlog from "./Blog/ReadBlog";
 import RelatedVideoCategory from "../components/videos/RelatedVideoCategory";
+import Subscription from "./Subscription/Subscription";
 export {
+    Subscription,
     Login,
     Signup,
     Welcome,
