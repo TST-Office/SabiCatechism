@@ -136,7 +136,7 @@ const Login = ({ navigation }) => {
       return setDisplayModalErr(true);
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       setErrMessage("Password is too short!");
       return setDisplayModalErr(true);
     }

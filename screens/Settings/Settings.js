@@ -4,11 +4,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS } from "../../constants";
 import { MaterialIcons } from "@expo/vector-icons";
 import Container from '../../components/Container';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import ThemeToggleButton from "../../components/ThemeToggleButton";
+import { logout as logoutAction } from "../../slices/userSlice";
 
 const Settings = ({ navigation }) => {
+  const dispatch = useDispatch()
   // Access the current theme from the Redux store
   const theme = useSelector((state) => state.theme);
 
@@ -63,7 +65,8 @@ const Settings = ({ navigation }) => {
   
 
   const logout = () => {
-    console.log("Logout");
+    dispatch(logoutAction());
+    navigation.navigate('Login');
   };
 
   const accountItems = [

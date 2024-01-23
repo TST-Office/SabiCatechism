@@ -151,6 +151,9 @@ const Signup = ({ navigation }) => {
 
     }
 
+
+    
+
     const registerUser = () => {
         setIsLoading(true);
         axios

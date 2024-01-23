@@ -13,8 +13,8 @@ import * as ImagePicker from "expo-image-picker";
 import { COLORS, FONTS } from "../../constants";
 import { MaterialIcons } from "@expo/vector-icons";
 import { imagesDataURL } from "../../constants/data";
-import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
-import { useSelector } from "react-redux";
+// import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
+import { useSelector, useDispatch } from "react-redux";
 import Container from "../../components/Container";
 import * as Device from 'expo-device'
 import axios from "axios";
@@ -22,10 +22,14 @@ import ErrorModal from "../../components/ErrorModal";
 import FormSuccess from "../../components/FormSuccess";
 import { API_URL } from "../../constants";
 
+import { setUser, logout } from "../../slices/userSlice";
+
+
 
 
 const EditProfile = ({ navigation }) => {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const [name, setName] = useState(user.user.name);
   const [username, setUsername] = useState(user.user.username);
@@ -125,11 +129,60 @@ const EditProfile = ({ navigation }) => {
       handleEmailValidation(email);
       handleUsernameValidation(username);
       handleNameValidation(name);
-      // registerUser();
+      updateUserProfile();
 
   }
+  const updateUserProfile = () => {
+    setIsLoading(true);
+    axios
+      .post(`${API_URL}/updateProfile`, {
+        username: username,
+        name: name,
+        email: email,
+        devicename: Device.modelName,
+        uId: userId
+      })
+      .then((response) => {
+        console.log("request sent", response.data);
+        if (response.data.status === true) {
+          setIsLoading(false)
+          setSuccessMessage("Profile details updated successfully")
+          setUsername("")
+          setName("")
+          setEmail("")
+          console.log("Profile update successful: ", response.data.user);
 
- 
+         // set user details fetched from the api
+         const userData = {
+          id: response.data.user.id,
+          userDetails: response.data,
+          user: response.data.user
+        }
+        // persist the user details
+        dispatch(setUser(userData))
+
+        }
+        if (response.data.status === false) {
+          setIsLoading(false);
+          setErrMessage(response.data.message);
+          return setDisplayModalErr(true);
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false);
+          // setErrMessage("Network error, try again later");
+          setErrMessage(error.message);
+
+          return setDisplayModalErr(true);
+        console.log("profile update error code: ", error.message);
+      });
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    // Additional logic after logout
+    navigation.navigate('Login');
+  };
 
  
   return (
@@ -278,11 +331,11 @@ const EditProfile = ({ navigation }) => {
 
             {isLoading === true ? (
                 <FormSuccess />
-            ) : successMessage == "Signup successful" ? (
+            ) : successMessage == "Profile details updated successfully" ? (
                 <FormSuccess
                     successMessage={successMessage}
                     close={setSuccessMessage}
-                    onPress={() => navigation.navigate("Login")}
+                    onPress={handleLogout}
                 />
             ) : null}
       </ScrollView>
