@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { setVideos } from "../../slices/videoSlice";
+import { setInvestmentPackage } from "../../slices/investmentPackageSlice";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { COLORS, API_URL, SIZES } from "../../constants";
@@ -105,33 +106,34 @@ const LatestVideos = () => {
   console.log("suggested video", suggestedVideo);
 
   useEffect(() => {
+    // load all videos
     const loadVideos = async () => {
       try {
         const response = await axios.get(`${API_URL}/allvideo`);
-  
+
         if (response.data) {
           setIsLoading(false);
           const fetchedVideos = response.data;
           // console.log("VIDEOS VIDEOS: ", fetchedVideos);
-  
+
           // const videosWithLocalUri = await Promise.all(
           //   fetchedVideos.map(async (video) => {
           //     const videoUri = `${API_URL}/video/${video?.id}`;
           //     const localUri = FileSystem.documentDirectory + `${video?.video}`;
           //     // console.log("LOCAL URI", localUri);
-  
+
           //     const fileInfo = await FileSystem.getInfoAsync(localUri);
           //     console.log("file Information", fileInfo);
-  
+
           //     if (!(fileInfo.exists)) {
           //       const videoResponse = await axios.get(videoUri);
           //       const base64Video = videoResponse.data[0].video;
-  
+
           //       // Convert Base64 to Blob
           //       const blob = blobUtil.base64StringToBlob(base64Video);
           //       console.log("SINGLE VIDEO RESPONSE: ", blob);
-              
-  
+
+
           //       try {
           //         await FileSystem.writeAsStringAsync(localUri, blob, {
           //           encoding: FileSystem.EncodingType.Base64,
@@ -140,7 +142,7 @@ const LatestVideos = () => {
           //         console.error('Error writing file:', error);
           //       }
           //     }
-  
+
           //     // Return an object with both video details and localUri
           //     return {
           //       ...video,
@@ -148,7 +150,7 @@ const LatestVideos = () => {
           //     };
           //   })
           // );
-  
+
           // Cache video details in Redux
           dispatch(setVideos(response.data));
         }
@@ -156,10 +158,29 @@ const LatestVideos = () => {
         console.log(error.message);
       }
     };
-  
+
+
+    // fetch all available investment packages 
+    const investmentPackages = async () => {
+      try {
+
+        const investmentPackageResponse = await axios.get(`${API_URL}/paymentPlans`);
+        if (investmentPackageResponse.data) {
+          const fetchedPackages = investmentPackageResponse.data;
+
+
+          // console.log('FETCHED INVESTMENTS: ', fetchedPackages);
+          dispatch(setInvestmentPackage(fetchedPackages))
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+
     loadVideos();
+    investmentPackages();
   }, [dispatch]);
-  
+
 
   const styles = StyleSheet.create({
     image: {

@@ -17,7 +17,7 @@ import {
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['user', 'videos', 'theme', 'blog', 'watchedVideos']
+    whitelist: ['user', 'videos', 'theme', 'blog', 'watchedVideos', 'investmentPackage']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
