@@ -92,7 +92,7 @@ const Settings = ({ navigation }) => {
   const actionsItems = [
     {
       icon: "outlined-flag",
-      text: "Report a problem",
+      text: "Update Password",
       action: navigateToReportProblem,
     },
     { icon: "logout", text: "Log out", action: logout },

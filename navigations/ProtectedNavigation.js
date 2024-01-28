@@ -14,7 +14,8 @@ import {
   PlayVideo,
   ReadBlog,
   RelatedVideoCategory,
-  Subscription
+  Subscription,
+  PaySubscription
 } from "../screens";
 import BottomTabNav from "./BottomTabNav";
 
@@ -118,7 +119,15 @@ const ProtectedNavigation = () => {
           headerShown: false,
         }}
       />
+       <Stack.Screen
+        name="PaySubscription"
+        component={PaySubscription}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
+    
   );
 };
 

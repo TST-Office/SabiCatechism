@@ -9,6 +9,7 @@ import ProtectedNavigation from "./navigations/ProtectedNavigation";
 import ThemeToggleButton from "./components/ThemeToggleButton";
 import { useSelector } from "react-redux";
 import { ThemeProvider } from "./components/ThemeContext";
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 //  number of downloads and location
 //  user subscriptIon admin info
@@ -42,11 +43,13 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ThemeProvider>
-          <NavigationContainer onReady={onLayoutRootView}>
-            <ProtectedNavigation />
-          </NavigationContainer>
+        <RootSiblingParent>
+          <ThemeProvider>
+            <NavigationContainer onReady={onLayoutRootView}>
+              <ProtectedNavigation />
+            </NavigationContainer>
           </ThemeProvider>
+        </RootSiblingParent>
       </PersistGate>
     </Provider>
   );

@@ -12,7 +12,7 @@ import ErrorModal from "../../components/ErrorModal";
 import FormSuccess from "../../components/FormSuccess";
 // import { API_URL } from "../../constants";
 import { setInvestmentPackage } from '../../slices/investmentPackageSlice';
-import {API_URL, SIZES } from "../../constants";
+import { API_URL, SIZES } from "../../constants";
 
 
 const Subscription = ({ navigation }) => {
@@ -21,8 +21,9 @@ const Subscription = ({ navigation }) => {
     // console.log("SUBSCRIPTION PACKAGES", subscriptionPackages);
 
     const user = useSelector((state) => state.user);
-    // console.log("user details", user.userDetails.user_plan);
     const [userPlan, setUserPlan] = useState(user.userDetails.user_plan)
+    // console.log("user details", userPlan);
+
 
 
     const theme = useSelector((state) => state.theme);
@@ -35,13 +36,21 @@ const Subscription = ({ navigation }) => {
         color: theme === "light" ? DarkBgColors.primary : LightBgColors.primary,
     };
 
-    const subscriptionPackageView = (item) => {
+    const SubscriptionPackageView = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => ""}>
-                <Text>subscription packages</Text>
+            <TouchableOpacity
+                style={styles.packageContainer}
+                onPress={() => {
+                    // Handle the onPress action here (e.g., navigate to payment screen)
+                    navigation.navigate("PaySubscription", {subscription: item})
+                }}
+            >
+                <Text style={styles.packageName}>{item.name}</Text>
+                <Text style={styles.packageAmount}>Amount: ₦{item.amount}</Text>
+                <Text style={styles.packageDuration}>Duration: {item.duration_in_name}</Text>
             </TouchableOpacity>
-        )
-    }
+        );
+    };
 
     const dispatch = useDispatch();
     return (
@@ -74,23 +83,19 @@ const Subscription = ({ navigation }) => {
 
             <View style={styles.main}>
                 {
-                    userPlan ? (
-                        <Text>MY Plan Details</Text>
+                    userPlan.length ? (
+                        <Text>You have an active plan: {userPlan}</Text>
                     ) : (
-
-                        <FlatList
-                            data={subscriptionPackages}
-                            renderItem={({ item }) => <subscriptionPackageView item={item} />}
-                            keyExtractor={(item, index) => index.toString()}
-                            contentContainerStyle={{columnGap: SIZES.large}}
-                            horizontal
-
-                        />
-
-                    )
-                }
+                        <View style={styles.main}>
+                            <FlatList
+                                data={subscriptionPackages}
+                                renderItem={({ item }) => <SubscriptionPackageView item={item} />}
+                                keyExtractor={(item) => item.id.toString()}
+                                contentContainerStyle={styles.flatListContainer}
+                            />
+                        </View>
+                    )}
             </View>
-            <Text>Subscription</Text>
         </Container>
     )
 }
@@ -99,6 +104,28 @@ export default Subscription
 
 const styles = StyleSheet.create({
     main: {
+        flex: 1,
         marginTop: 20,
-    }
+    },
+    flatListContainer: {
+        paddingHorizontal: 16,
+    },
+    packageContainer: {
+        backgroundColor: '#e0e0e0',
+        padding: 16,
+        borderRadius: 8,
+        marginBottom: 12,
+    },
+    packageName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    packageAmount: {
+        fontSize: 16,
+        marginTop: 8,
+    },
+    packageDuration: {
+        fontSize: 16,
+        marginTop: 8,
+    },
 })

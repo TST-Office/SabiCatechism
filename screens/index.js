@@ -14,6 +14,8 @@ import PlayVideo from "./SingleVideo/PlayVideo";
 import ReadBlog from "./Blog/ReadBlog";
 import RelatedVideoCategory from "../components/videos/RelatedVideoCategory";
 import Subscription from "./Subscription/Subscription";
+import PaySubscription from "./Subscription/PaySubscription";
+
 export {
     Subscription,
     Login,
@@ -30,5 +32,6 @@ export {
     AllVideos,
     PlayVideo,
     ReadBlog,
-    RelatedVideoCategory
+    RelatedVideoCategory,
+    PaySubscription
 }
