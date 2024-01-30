@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Fontisto } from "@expo/vector-icons";
-import Carousel from "../../components/Carousel";
+// import Carousel from "../../components/Carousel";
 import { COLORS, SIZES } from "../../constants";
 import Container from "../../components/Container";
 import HeaderSection from "../../components/HeaderSection";
@@ -30,7 +30,7 @@ const Home = ({ navigation }) => {
       <HeaderSection onPress={() => navigation.navigate("Profile")} />
       <ScrollView>
         <CategorySection />
-        <Carousel />
+        {/* <Carousel /> */}
         <LatestVideos />
         <LatestBlogs />
       </ScrollView>

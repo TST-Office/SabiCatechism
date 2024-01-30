@@ -302,7 +302,7 @@ const LatestVideos = () => {
       <ActivityIndicator color={"green"} size={"large"} />
     ) : (
       <>
-        {userPlan.length === 0 ? (
+        {userPlan?.length === 0 ? (
           <>
             <View>
               <Text style={{ color: theme === "light" ? COLORS.white : DarkBgColors.bgGray, fontSize: SIZES.h4 }}>
@@ -325,7 +325,7 @@ const LatestVideos = () => {
             </View>
             <FlatList
               data={videos}
-              keyExtractor={(item, index) => index.toString()}
+              keyExtractor={(item, index) => index?.toString()}
               horizontal={true}
               renderItem={({ item }) => <VideoComponent video={item} />}
               contentContainerStyle={{ columnGap: 12 }}
