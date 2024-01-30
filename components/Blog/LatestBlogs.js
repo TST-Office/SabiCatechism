@@ -229,7 +229,7 @@ const LatestBlogs = () => {
         <>
           <FlatList
             data={blogs}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item, index) => (item && item.id ? item.id.toString() : index.toString())}
             horizontal={true}
             renderItem={({ item }) => <BlogComponent blog={item} />}
             contentContainerStyle={{ columnGap: 12 }}

@@ -131,7 +131,7 @@ const AllVideos = () => {
           <FlatList
             data={videos}
             renderItem={allVideoComponent}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id}
             style={styles.flatList}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}

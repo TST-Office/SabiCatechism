@@ -16,14 +16,22 @@ import { COLORS, SIZES, API_URL, FONTS } from "../../constants";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import Toast from "react-native-root-toast";
-import { Paystack } from "react-native-paystack-webview";
+import { Paystack, paystackProps } from "react-native-paystack-webview";
+import { PAYSTACK_SDK } from "../../constants/api";
+import { setUser } from "../../slices/userSlice";
+import axios from "axios";
+import { logout as logoutAction } from "../../slices/userSlice";
+
+
 
 
 const PaySubscription = ({ navigation }) => {
+    const paystackWebViewRef = useRef(paystackProps.PayStackRef);
+
     const dispatch = useDispatch();
     const theme = useSelector((state) => state.theme);
     const user = useSelector((state) => state.user);
-    console.log(user.user.email)
+    // console.log(user.user.id)
 
 
     // Define a style object for text and icon colors based on the theme
@@ -39,20 +47,24 @@ const PaySubscription = ({ navigation }) => {
     const { subscription } = route.params;
     const [amount, setAmount] = useState('');
     const [durationName, setDurationName] = useState('');
+    const [durationInNumber, setDurationInNumber] = useState('');
     const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [email, SetEmail] = useState(user.user.email)
+    const [userId, setUserId] = useState(user.user.id)
 
     useEffect(() => {
         if (subscription) {
-            const { id, name, duration_in_name, amount } = subscription
+            const { id, name, duration_in_name, amount, duration_in_number } = subscription
             setId(id)
             setName(name)
             setDurationName(duration_in_name)
             setAmount(amount)
+            setDurationInNumber(duration_in_number)
         }
-    }, [subscription])
-    console.log(durationName)
+    }, [subscription]);
+
+
     // display selected subscription plan
     const DisPlaySubscription = ({ item }) => {
         return (
@@ -66,6 +78,17 @@ const PaySubscription = ({ navigation }) => {
                 </View>
             </View>
         );
+    };
+    const handleCancel = () => {
+        // Display error toast for cancelled transaction
+        Toast.show("Transaction Cancelled!", {
+            duration: Toast.durations.LONG,
+            backgroundColor: "red", // Error color
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            position: Toast.positions.BOTTOM,
+        });
     };
     return (
         <Container>
@@ -96,6 +119,87 @@ const PaySubscription = ({ navigation }) => {
             </View>
 
             <View style={styles.main}>
+                <View style={{ flex: 1 }}>
+                    <Paystack
+                        paystackKey={PAYSTACK_SDK}
+                        billingEmail={email}
+                        amount={amount}
+                        channels={["card", "bank", "ussd", "qr", "mobile_money"]}
+                        onCancel={handleCancel}
+
+                        onSuccess={(res) => {
+                            // handle response here
+                            console.log("PAYSTACK SUCCESS RES: ", res.data)
+
+                            axios.post(`${API_URL}/payment`, {
+                                userId: parseInt(userId),
+                                paymentPlanId: parseInt(id),
+                                duration: parseFloat(durationInNumber),
+                                transactionReference: res.data.transactionRef.reference,
+                                amount: amount,
+                                payment_type: "Online Payment with Paystack",
+                            }).then((response) => {
+                                console.log("Payment API response:", response.data);
+                                if (response.data.status === true) {
+                                    const userData = {
+                                        id: response.data.username.id,
+                                        userDetails: response.data,
+                                        user: response.data.username
+                                    };
+                                    // persist the user details
+                                
+                                    Toast.show("Transaction Approved!!", {
+                                        duration: Toast.durations.LONG,
+                                    });
+                                    dispatch(setUser(userData));
+                                    
+                                    dispatch(logoutAction());
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Login' }],
+                                    });
+                                } else {
+                                    // Display error toast for failed transaction 
+                                    Toast.show(response.data.message, {
+                                        duration: Toast.durations.LONG,
+                                        backgroundColor: "red", // Error color
+                                        shadow: true,
+                                        animation: true,
+                                        hideOnPress: true,
+                                        position: Toast.positions.BOTTOM,
+                                    });
+                                }
+                                if (res.data.status == false) {
+                                    // Display error toast for failed transaction 
+                                    Toast.show(res.data.message, {
+                                        duration: Toast.durations.LONG,
+                                        backgroundColor: "red", // Error color
+                                        shadow: true,
+                                        animation: true,
+                                        hideOnPress: true,
+                                        position: Toast.positions.BOTTOM,
+                                    });
+                                }
+
+                            }).catch((error) => {
+                                console.error("Error from payment API:", error);
+                                // Display error toast for failed transaction 
+                                Toast.show("Error processing payment. Please try again later.", {
+                                    duration: Toast.durations.LONG,
+                                    backgroundColor: "red", // Error color
+                                    shadow: true,
+                                    animation: true,
+                                    hideOnPress: true,
+                                    position: Toast.positions.BOTTOM,
+                                });
+                            })
+
+                        }}
+                        ref={paystackWebViewRef}
+                    />
+
+
+                </View>
 
                 <View style={styles.main}>
                     <FlatList
@@ -106,7 +210,7 @@ const PaySubscription = ({ navigation }) => {
                     />
                 </View>
             </View>
-            <TouchableOpacity style={styles.subscribeButton} onPress={()=> ''}>
+            <TouchableOpacity style={styles.subscribeButton} onPress={() => paystackWebViewRef.current.startTransaction()}>
                 <Image source={require("../../assets/Paystack.png")} style={styles.paystackLogo} />
                 <Text style={styles.subscribeText}>Subscribe Now</Text>
             </TouchableOpacity>
@@ -150,7 +254,7 @@ const styles = StyleSheet.create({
     packageAmount: {
         fontSize: 20,
         marginBottom: 15,
-        marginTop:20
+        marginTop: 20
     },
     packageDuration: {
         fontSize: 20,
@@ -164,9 +268,18 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         marginHorizontal: 20,
         marginTop: 20,
+        // Shadow properties
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     paystackLogo: {
-        width: 24,
+        width: 150,
         height: 24,
         marginRight: 10,
     },

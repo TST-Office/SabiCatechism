@@ -17,35 +17,39 @@ import { useNavigation } from "@react-navigation/native";
 
 const CategorySection = () => {
   const theme = useSelector((state) => state.theme);
+  const user = useSelector((state) => state.user);
+  const [userPlan, setUserPlan] = useState(user.userDetails.user_plan);
+
   const [activeCategoryType, setActiveCategoryType] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
-
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    if (userPlan.length > 0) {
+      fetchCategories();
+    }
+  }, [userPlan]);
 
   const fetchCategories = () => {
     setIsLoading(true);
-    axios.get(`${API_URL}/categories`).then((response) => {
-      if (response.data) {
-        setIsLoading(false);
-        setActiveCategoryType(response.data);
-        console.log(response.data);
-      }
-    }).catch((error) => {
-      setIsLoading(true); // Set isLoading to false on error
-      console.log(error.message);
-    });
+    axios
+      .get(`${API_URL}/categories`)
+      .then((response) => {
+        if (response.data) {
+          setIsLoading(false);
+          setActiveCategoryType(response.data);
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false); // Set isLoading to false on error
+        console.log(error.message);
+      });
   };
 
   const handleCategoryClick = (item) => {
-    navigation.navigate("RelatedVideoCategory", {catName: item.name});
-  }
-
-
+    navigation.navigate("RelatedVideoCategory", { catName: item.name });
+  };
 
   const styles = StyleSheet.create({
     tabsContainer: {
@@ -68,15 +72,28 @@ const CategorySection = () => {
     tabText: (item) => ({
       color:
         activeCategoryType && activeCategoryType.id === item.id
-          ? theme === "light" ? DarkBgColors.text : LightBgColors.text
-          : theme === "light" ? DarkBgColors.text : LightBgColors.text,
+          ? theme === "light"
+            ? DarkBgColors.text
+            : LightBgColors.text
+          : theme === "light"
+            ? DarkBgColors.text
+            : LightBgColors.text,
     }),
   });
 
+  if (userPlan.length === 0) {
+    return null; // If userPlan array is empty, don't render anything
+  }
+
   return (
     <View style={styles.tabsContainer}>
-      {isLoading ?  ( // Show ActivityIndicator when isLoading is true
-        <ActivityIndicator size={"large"} color={theme === "light" ?LightBgColors.primary :  COLORS.primary} />
+      {isLoading ? ( // Show ActivityIndicator when isLoading is true
+        <ActivityIndicator
+          size={"large"}
+          color={
+            theme === "light" ? LightBgColors.primary : COLORS.primary
+          }
+        />
       ) : (
         <FlatList
           data={activeCategoryType}
@@ -88,7 +105,7 @@ const CategorySection = () => {
               <Text style={styles.tabText(item)}>{item.name}</Text>
             </TouchableOpacity>
           )}
-          keyExtractor={(item) => item.id.toString()} // Use the id as the key
+          keyExtractor={(item) => (item && item.id ? item.id.toString() : null)} // Use the id as the key
           contentContainerStyle={{ columnGap: 12 }}
           horizontal
         />
@@ -96,5 +113,6 @@ const CategorySection = () => {
     </View>
   );
 };
+
 
 export default CategorySection;

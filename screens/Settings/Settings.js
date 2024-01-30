@@ -64,9 +64,13 @@ const Settings = ({ navigation }) => {
 
   
 
-  const logout = () => {
+ 
+  const handleLogout = () => { // Rename logout function to handleLogout
     dispatch(logoutAction());
-    navigation.navigate('Login');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
   };
 
   const accountItems = [
@@ -95,7 +99,7 @@ const Settings = ({ navigation }) => {
       text: "Update Password",
       action: navigateToReportProblem,
     },
-    { icon: "logout", text: "Log out", action: logout },
+    { icon: "logout", text: "Log out", action: handleLogout },
   ];
 
   const renderSettingsItem = ({ icon, text, action }) => (

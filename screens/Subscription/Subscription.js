@@ -22,7 +22,8 @@ const Subscription = ({ navigation }) => {
 
     const user = useSelector((state) => state.user);
     const [userPlan, setUserPlan] = useState(user.userDetails.user_plan)
-    // console.log("user details", userPlan);
+    console.log("user details", userPlan[0]);
+    console.log("USER: ", user.userDetails);
 
 
 
@@ -35,6 +36,26 @@ const Subscription = ({ navigation }) => {
     const touchableBg = {
         color: theme === "light" ? DarkBgColors.primary : LightBgColors.primary,
     };
+    // Format start date
+    const startDate = new Date(userPlan[0]?.created_at);
+    const startDateOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "long"
+    };
+    const formattedStartDate = startDate.toLocaleDateString("en-US", startDateOptions);
+
+    // Format end date
+    const endDate = new Date(user.userDetails.expiry_date);
+    const endDateOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "long"
+    };
+    const formattedEndDate = endDate.toLocaleDateString("en-US", endDateOptions);
+
 
     const SubscriptionPackageView = ({ item }) => {
         return (
@@ -42,7 +63,7 @@ const Subscription = ({ navigation }) => {
                 style={styles.packageContainer}
                 onPress={() => {
                     // Handle the onPress action here (e.g., navigate to payment screen)
-                    navigation.navigate("PaySubscription", {subscription: item})
+                    navigation.navigate("PaySubscription", { subscription: item })
                 }}
             >
                 <Text style={styles.packageName}>{item.name}</Text>
@@ -55,48 +76,59 @@ const Subscription = ({ navigation }) => {
     const dispatch = useDispatch();
     return (
         <Container>
-            <View
+        <View style={{ marginTop: 30 }}>
+            <TouchableOpacity
+                onPress={() => navigation.goBack()}
                 style={{
-                    marginTop: 20,
-                    marginHorizontal: 12,
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    marginTop: 30
+                    position: "absolute",
+                    left: 0,
+                    paddingHorizontal: 12
                 }}
             >
-                <TouchableOpacity
-                    onPress={() => navigation.goBack()}
-                    style={{
-                        position: "absolute",
-                        left: 0,
-                    }}
-                >
-                    <MaterialIcons
-                        name="keyboard-arrow-left"
-                        size={24}
-                        color={COLORS.black}
-                    />
-                </TouchableOpacity>
+                <MaterialIcons
+                    name="keyboard-arrow-left"
+                    size={34}
+                    color={theme === "light" ? DarkBgColors.text : LightBgColors.text}
+                />
+            </TouchableOpacity>
+            <Text style={{ ...FONTS.h3, ...textAndIconStyles, textAlign: 'center' }}>Subscription</Text>
+        </View>
 
-                <Text style={{ ...FONTS.h3, ...textAndIconStyles }}>Subscription</Text>
-            </View>
-
-            <View style={styles.main}>
-                {
-                    userPlan.length ? (
-                        <Text>You have an active plan: {userPlan}</Text>
-                    ) : (
-                        <View style={styles.main}>
-                            <FlatList
-                                data={subscriptionPackages}
-                                renderItem={({ item }) => <SubscriptionPackageView item={item} />}
-                                keyExtractor={(item) => item.id.toString()}
-                                contentContainerStyle={styles.flatListContainer}
-                            />
-                        </View>
-                    )}
-            </View>
-        </Container>
+        <View style={styles.main}>
+            {userPlan.length ? (
+                <View style={styles.activePlanContainer}>
+                    <Text style={styles.activePlanHeading}>Your Active Plan:</Text>
+                    <View style={styles.activePlanItem}>
+                        <Text style={styles.activePlanItemLabel}>Plan Name:</Text>
+                        <Text style={styles.activePlanItemValue}>{userPlan[0].name}</Text>
+                    </View>
+                    <View style={styles.activePlanItem}>
+                        <Text style={styles.activePlanItemLabel}>Transaction Code:</Text>
+                        <Text style={styles.activePlanItemValue}>{userPlan[0].transaction_reference}</Text>
+                    </View>
+                    <View style={styles.activePlanItem}>
+                        <Text style={styles.activePlanItemLabel}>Duration:</Text>
+                        <Text style={styles.activePlanItemValue}>{userPlan[0].duration_in_name}</Text>
+                    </View>
+                    <View style={styles.activePlanItem}>
+                        <Text style={styles.activePlanItemLabel}>Start Date:</Text>
+                        <Text style={styles.activePlanItemValue}>{formattedStartDate}</Text>
+                    </View>
+                    <View style={styles.activePlanItem}>
+                        <Text style={styles.activePlanItemLabel}>End Date:</Text>
+                        <Text style={styles.activePlanItemValue}>{formattedEndDate}</Text>
+                    </View>
+                </View>
+            ) : (
+                <FlatList
+                    data={subscriptionPackages}
+                    renderItem={({ item }) => <SubscriptionPackageView item={item} />}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={styles.flatListContainer}
+                />
+            )}
+        </View>
+    </Container>
     )
 }
 
@@ -127,5 +159,37 @@ const styles = StyleSheet.create({
     packageDuration: {
         fontSize: 16,
         marginTop: 8,
+    },
+    activePlanContainer: {
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 8,
+        marginBottom: 12,
+        marginTop: 50,
+        marginHorizontal: 30,
+
+        
+        // justifyContent: 'center',
+        // alignItems: 'center'
+    },
+    activePlanHeading: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 8,
+    },
+    activePlanList: {
+        paddingHorizontal: 16,
+    },
+    activePlanItem: {
+        flexDirection: 'row',
+        marginBottom: 4,
+    },
+    activePlanItemLabel: {
+        fontWeight: 'bold',
+        marginRight: 8,
+    },
+    activePlanItemValue: {
+        flex: 1,
     },
 })

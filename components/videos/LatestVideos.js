@@ -25,6 +25,9 @@ import * as blobUtil from 'blob-util';
 
 const LatestVideos = () => {
   const user = useSelector((state) => state.user);
+  const [userPlan, setUserPlan] = useState(user.userDetails.user_plan)
+  console.log("user details", userPlan[0]);
+
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);
   const [isLoading, setIsLoading] = useState(false);
@@ -295,62 +298,52 @@ const LatestVideos = () => {
 
   return (
     <View style={{ marginTop: 15, paddingHorizontal: 10 }}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            color: theme === "light" ? COLORS.white : DarkBgColors.bgGray,
-            fontSize: SIZES.h4,
-          }}
-        >
-          Latest Videos
-        </Text>
-        <TouchableOpacity
-          style={styles.showMoreButton}
-          onPress={allVideoNavigateTo}
-        >
-          <Text style={styles.showMoreText}>Show more</Text>
-          <MaterialIcons
-            name="keyboard-arrow-right" // Use the right arrow icon
-            size={24} // Set the icon size
-            color={theme === "light" ? COLORS.white : DarkBgColors.bgGray} // Set the icon color
-          />
-        </TouchableOpacity>
-      </View>
-
-      {isLoading ? (
-        <ActivityIndicator color={"green"} size={"large"} />
-      ) : (
-        <>
-          <FlatList
-            data={videos}
-            keyExtractor={(item, index) => index.toString()}
-            horizontal={true}
-            renderItem={({ item }) => <VideoComponent video={item} />}
-            contentContainerStyle={{ columnGap: 12 }}
-            showsHorizontalScrollIndicator={false}
-          />
-          {suggestedVideo && (
+    {isLoading ? (
+      <ActivityIndicator color={"green"} size={"large"} />
+    ) : (
+      <>
+        {userPlan.length === 0 ? (
+          <>
             <View>
-              <Text
-                style={{
-                  color: theme === "light" ? COLORS.white : DarkBgColors.bgGray,
-                  fontSize: SIZES.h4,
-                }}
-              >
+              <Text style={{ color: theme === "light" ? COLORS.white : DarkBgColors.bgGray, fontSize: SIZES.h4 }}>
                 Suggested Video
               </Text>
               <SuggestVideoComp video={suggestedVideo} />
             </View>
-          )}
-        </>
-      )}
-    </View>
+           
+          </>
+        ) : (
+          <>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <Text style={{ color: theme === "light" ? COLORS.white : DarkBgColors.bgGray, fontSize: SIZES.h4 }}>
+                Latest Videos
+              </Text>
+              <TouchableOpacity style={styles.showMoreButton} onPress={allVideoNavigateTo}>
+                <Text style={styles.showMoreText}>Show more</Text>
+                <MaterialIcons name="keyboard-arrow-right" size={24} color={theme === "light" ? COLORS.white : DarkBgColors.bgGray} />
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              data={videos}
+              keyExtractor={(item, index) => index.toString()}
+              horizontal={true}
+              renderItem={({ item }) => <VideoComponent video={item} />}
+              contentContainerStyle={{ columnGap: 12 }}
+              showsHorizontalScrollIndicator={false}
+            />
+            {suggestedVideo && (
+              <View>
+                <Text style={{ color: theme === "light" ? COLORS.white : DarkBgColors.bgGray, fontSize: SIZES.h4 }}>
+                  Suggested Video
+                </Text>
+                <SuggestVideoComp video={suggestedVideo} />
+              </View>
+            )}
+          </>
+        )}
+      </>
+    )}
+  </View>
   );
 };
 

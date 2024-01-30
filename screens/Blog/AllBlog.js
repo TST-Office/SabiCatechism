@@ -134,7 +134,7 @@ export default function AllBlog() {
           <FlatList
             data={blogs}
             renderItem={allBlogComponent}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id}
             style={styles.flatList}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}

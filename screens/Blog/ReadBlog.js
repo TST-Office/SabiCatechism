@@ -116,7 +116,7 @@ const ReadBlog = () => {
           {/* Blog Author and Date */}
           <View style={styles.authorDateContainer}>
             <Text style={styles.author}>By {blog.author}</Text>
-            <Text style={styles.date}>{formattedDate(blog.created_at)}</Text>
+            {/* <Text style={styles.date}>{formattedDate(blog.created_at)}</Text> */}
           </View>
           {/* Blog Content */}
           <Text style={styles.content}>{blog.description}</Text>

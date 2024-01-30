@@ -21,7 +21,7 @@ import axios from "axios";
 import ErrorModal from "../../components/ErrorModal";
 import FormSuccess from "../../components/FormSuccess";
 import { API_URL } from "../../constants";
-
+import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { setUser, logout } from "../../slices/userSlice";
 
 
@@ -29,6 +29,8 @@ import { setUser, logout } from "../../slices/userSlice";
 
 const EditProfile = ({ navigation }) => {
   const user = useSelector((state) => state.user);
+  const theme = useSelector((state) => state.theme);
+
   const dispatch = useDispatch();
 
   const [name, setName] = useState(user.user.name);
@@ -180,8 +182,10 @@ const EditProfile = ({ navigation }) => {
 
   const handleLogout = () => {
     dispatch(logout());
-    // Additional logic after logout
-    navigation.navigate('Login');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
   };
 
  
@@ -211,7 +215,7 @@ const EditProfile = ({ navigation }) => {
           <MaterialIcons
             name="keyboard-arrow-left"
             size={24}
-            color={COLORS.black}
+            color={theme === "light" ? DarkBgColors.text : LightBgColors.text}
           />
         </TouchableOpacity>
 
