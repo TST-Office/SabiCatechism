@@ -3,12 +3,14 @@ import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
 import Button from "../components/Button";
-
+import { SIZES } from "../constants/theme";
 const Welcome = ({ navigation }) => {
   return (
     <LinearGradient
       style={{
         flex: 1,
+        width: SIZES.width,
+        height: SIZES.height,
       }}
       colors={[COLORS.secondary, COLORS.primary]}
     >
