@@ -193,7 +193,6 @@ const EditProfile = ({ navigation }) => {
     <Container
       style={{
         flex: 1,
-        backgroundColor: COLORS.white,
         paddingHorizontal: 22,
       }}
     >
@@ -214,12 +213,12 @@ const EditProfile = ({ navigation }) => {
         >
           <MaterialIcons
             name="keyboard-arrow-left"
-            size={24}
+            size={40}
             color={theme === "light" ? DarkBgColors.text : LightBgColors.text}
           />
         </TouchableOpacity>
 
-        <Text style={{ ...FONTS.h3 }}>Edit Profile</Text>
+        <Text style={{ ...FONTS.h1, color: theme === "light" ? DarkBgColors.text : LightBgColors.text }}>Edit Profile</Text>
       </View>
 
       <ScrollView>
@@ -229,15 +228,15 @@ const EditProfile = ({ navigation }) => {
           <View
             style={{
               flexDirection: "column",
-              marginBottom: 6,
+              marginBottom: 20,
             }}
           >
-            <Text style={{ ...FONTS.h4 }}>Name</Text>
+            <Text style={{ ...FONTS.h4, color: theme === "light" ? DarkBgColors.text : LightBgColors.text }}>Name</Text>
             <View
               style={{
                 height: 44,
                 width: "100%",
-                borderColor: COLORS.secondaryGray,
+                borderColor: theme === "light" ? DarkBgColors.text : LightBgColors.text,
                 borderWidth: 1,
                 borderRadius: 4,
                 marginVertical: 6,
@@ -249,21 +248,22 @@ const EditProfile = ({ navigation }) => {
                 value={name}
                 onChangeText={(value) => setName(value)}
                 editable={true}
+                style={{color: theme === "light" ? DarkBgColors.moon : LightBgColors.text}}
               />
             </View>
           </View>
           <View
             style={{
               flexDirection: "column",
-              marginBottom: 6,
+              marginBottom: 20,
             }}
           >
-            <Text style={{ ...FONTS.h4 }}>Username</Text>
+            <Text style={{ ...FONTS.h4, color: theme === "light" ? DarkBgColors.text : LightBgColors.text }}>Username</Text>
             <View
               style={{
                 height: 44,
                 width: "100%",
-                borderColor: COLORS.secondaryGray,
+                borderColor: theme === "light" ? DarkBgColors.text : LightBgColors.text,
                 borderWidth: 1,
                 borderRadius: 4,
                 marginVertical: 6,
@@ -275,6 +275,7 @@ const EditProfile = ({ navigation }) => {
                 value={username}
                 onChangeText={(value) => setUsername(value)}
                 editable={true}
+                style={{color: theme === "light" ? DarkBgColors.moon : LightBgColors.text}}
               />
             </View>
           </View>
@@ -282,15 +283,15 @@ const EditProfile = ({ navigation }) => {
           <View
             style={{
               flexDirection: "column",
-              marginBottom: 6,
+              marginBottom: 20,
             }}
           >
-            <Text style={{ ...FONTS.h4 }}>Email</Text>
+            <Text style={{ ...FONTS.h4, color: theme === "light" ? DarkBgColors.text : LightBgColors.text }}>Email</Text>
             <View
               style={{
                 height: 44,
                 width: "100%",
-                borderColor: COLORS.secondaryGray,
+                borderColor: theme === "light" ? DarkBgColors.text : LightBgColors.text,
                 borderWidth: 1,
                 borderRadius: 4,
                 marginVertical: 6,
@@ -301,6 +302,7 @@ const EditProfile = ({ navigation }) => {
               <TextInput
                 value={email}
                 onChangeText={(value) => setEmail(value)}
+                style={{color: theme === "light" ? DarkBgColors.moon : LightBgColors.text}}
                 editable={true}
               />
             </View>

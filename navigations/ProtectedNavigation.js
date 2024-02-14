@@ -15,7 +15,9 @@ import {
   ReadBlog,
   RelatedVideoCategory,
   Subscription,
-  PaySubscription
+  PaySubscription,
+  SubscriptionSuccessPage,
+  UpdatePassword
 } from "../screens";
 import BottomTabNav from "./BottomTabNav";
 
@@ -25,7 +27,7 @@ const ProtectedNavigation = () => {
   const user = useSelector((state) => state.user);
   return (
     <Stack.Navigator
-      initialRouteName={user ? "BottomTabNavigation" : "Welcome"}
+      initialRouteName={user ? "SubscriptionSuccessPage" : "Welcome"}
     >
       <Stack.Screen
         name="BottomTabNavigation"
@@ -105,7 +107,7 @@ const ProtectedNavigation = () => {
           headerShown: false,
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="RelatedVideoCategory"
         component={RelatedVideoCategory}
         options={{
@@ -119,15 +121,29 @@ const ProtectedNavigation = () => {
           headerShown: false,
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="PaySubscription"
         component={PaySubscription}
         options={{
           headerShown: false,
         }}
       />
+       <Stack.Screen
+        name="SubscriptionSuccessPage"
+        component={SubscriptionSuccessPage}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="UpdatePassword"
+        component={UpdatePassword}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
-    
+
   );
 };
 

@@ -87,11 +87,11 @@ const Subscription = ({ navigation }) => {
             >
                 <MaterialIcons
                     name="keyboard-arrow-left"
-                    size={34}
+                    size={40}
                     color={theme === "light" ? DarkBgColors.text : LightBgColors.text}
                 />
             </TouchableOpacity>
-            <Text style={{ ...FONTS.h3, ...textAndIconStyles, textAlign: 'center' }}>Subscription</Text>
+            <Text style={{ ...FONTS.h1, ...textAndIconStyles, textAlign: 'center' }}>Subscription Plans</Text>
         </View>
 
         <View style={styles.main}>

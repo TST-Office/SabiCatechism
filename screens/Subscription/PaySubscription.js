@@ -148,16 +148,13 @@ const PaySubscription = ({ navigation }) => {
                                     };
                                     // persist the user details
                                 
-                                    Toast.show("Transaction Approved!!", {
-                                        duration: Toast.durations.LONG,
-                                    });
-                                    dispatch(setUser(userData));
+                                    // Toast.show("Transaction Approved!!", {
+                                    //     duration: Toast.durations.LONG,
+                                    // });
+                                    // dispatch(setUser(userData));
                                     
-                                    dispatch(logoutAction());
-                                    navigation.reset({
-                                        index: 0,
-                                        routes: [{ name: 'Login' }],
-                                    });
+                                    // dispatch(logoutAction());
+                                    navigation.navigate('SubscriptionSuccessPage');
                                 } else {
                                     // Display error toast for failed transaction 
                                     Toast.show(response.data.message, {

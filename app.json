@@ -4,7 +4,7 @@
     "slug": "Sabi-Project",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/splash.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -22,9 +22,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#000000"
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ],
+      
       "package": "com.ifeanyi22.SabiProject"
     },
     "web": {

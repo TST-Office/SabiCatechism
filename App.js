@@ -10,7 +10,7 @@ import ThemeToggleButton from "./components/ThemeToggleButton";
 import { useSelector } from "react-redux";
 import { ThemeProvider } from "./components/ThemeContext";
 import { RootSiblingParent } from 'react-native-root-siblings';
-
+import { LogBox } from 'react-native';
 //  number of downloads and location
 //  user subscriptIon admin info
 //  nav link will be called subscription plans
@@ -30,6 +30,9 @@ export default function App() {
     regular: require("./assets/fonts/Inter-Regular.ttf"),
     semiBold: require("./assets/fonts/Inter-SemiBold.ttf"),
   });
+
+  // temporal fix for now
+LogBox.ignoreLogs(['new NativeEventEmitter']); 
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {

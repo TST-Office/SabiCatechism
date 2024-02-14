@@ -244,7 +244,7 @@ export default function PlayVideo() {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          marginTop: 30,
+          marginTop: 20,
           marginVertical: 10,
           marginHorizontal: 10,
         }}

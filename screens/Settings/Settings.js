@@ -58,8 +58,10 @@ const Settings = ({ navigation }) => {
     console.log("Date saver");
   };
 
+  // COME BACK HERE ..
   const navigateToReportProblem = () => {
     console.log("Report a problem");
+    navigation.navigate('UpdatePassword');
   };
 
   
@@ -147,12 +149,12 @@ const Settings = ({ navigation }) => {
         >
           <MaterialIcons
             name="keyboard-arrow-left"
-            size={24}
-            color={COLORS.black}
+            size={40}
+            color={theme === "light" ? DarkBgColors.text : LightBgColors.text}
           />
         </TouchableOpacity>
 
-        <Text style={{ ...FONTS.h3, ...textAndIconStyles }}>Settings</Text>
+        <Text style={{ ...FONTS.h1, ...textAndIconStyles }}>Settings</Text>
       </View>
 
       <ScrollView style={{ marginHorizontal: 12, marginTop:20 }}>

@@ -5,6 +5,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   FlatList,
+  Platform
 } from "react-native";
 import React from "react";
 import Container from "../../components/Container";
@@ -23,7 +24,7 @@ const Messages = () => {
 
   const backButtonSize = 44;
   const backButtonMargin = 30;
-  // const backButtonTop = Platform.OS === "ios" ? 50 : backButtonMargin;
+  const backButtonTop = Platform.OS === "ios" ? 50 : backButtonMargin;
   const numColumns = 4;
   const columnWidth = (SIZES.width - 20) / numColumns;
 

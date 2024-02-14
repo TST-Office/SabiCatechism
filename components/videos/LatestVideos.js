@@ -22,6 +22,8 @@ import { useNavigation } from "@react-navigation/native";
 // import { FileSystem } from 'expo-file-system';
 import * as FileSystem from 'expo-file-system';
 import * as blobUtil from 'blob-util';
+import Toast from "react-native-root-toast";
+
 
 const LatestVideos = () => {
   const user = useSelector((state) => state.user);
@@ -42,6 +44,7 @@ const LatestVideos = () => {
 
 
 
+  // design component to render the video, 
   const VideoComponent = ({ video }) => {
     const navigateToPlayVideo = () => {
       navigation.navigate("PlayVideo", { video })
@@ -106,8 +109,10 @@ const LatestVideos = () => {
     return null;
   };
   const suggestedVideo = selectRandomVideo(); // Get a random video
-  console.log("suggested video", suggestedVideo);
+  console.log("suggested random video", suggestedVideo);
 
+
+  // load all the videos from the server and persist them same time
   useEffect(() => {
     // load all videos
     const loadVideos = async () => {
@@ -117,7 +122,7 @@ const LatestVideos = () => {
         if (response.data) {
           setIsLoading(false);
           const fetchedVideos = response.data;
-          // console.log("VIDEOS VIDEOS: ", fetchedVideos);
+          console.log("VIDEOS VIDEOS: ", fetchedVideos);
 
           // const videosWithLocalUri = await Promise.all(
           //   fetchedVideos.map(async (video) => {
@@ -158,7 +163,42 @@ const LatestVideos = () => {
           dispatch(setVideos(response.data));
         }
       } catch (error) {
-        console.log(error.message);
+        console.log("status request ", error.message);
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const status = error.response.status;
+          if (status === 404) {
+            // Resource not found (404 error)
+
+            Toast.show("The requested resource was not found", {
+              duration: 5000,
+            });
+          } else if (status >= 500) {
+            // Server error
+
+            Toast.show("Server Error, Please try again later", {
+              duration: 5000,
+            });
+          } else {
+            // Client error (4xx)
+
+            Toast.show("Network Error, Please check your internet connection", {
+              duration: 5000,
+            });
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+
+          Toast.show("Network Error, Please check your internet connection", {
+            duration: 5000,
+          });
+        } else {
+          // Something happened in setting up the request that triggered an error
+          Toast.show("Unknown Error, Please try again later", {
+            duration: 5000,
+          });
+        }
       }
     };
 
@@ -298,52 +338,52 @@ const LatestVideos = () => {
 
   return (
     <View style={{ marginTop: 15, paddingHorizontal: 10 }}>
-    {isLoading ? (
-      <ActivityIndicator color={"green"} size={"large"} />
-    ) : (
-      <>
-        {userPlan?.length === 0 ? (
-          <>
-            <View>
-              <Text style={{ color: theme === "light" ? COLORS.white : DarkBgColors.bgGray, fontSize: SIZES.h4 }}>
-                Suggested Video
-              </Text>
-              <SuggestVideoComp video={suggestedVideo} />
-            </View>
-           
-          </>
-        ) : (
-          <>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-              <Text style={{ color: theme === "light" ? COLORS.white : DarkBgColors.bgGray, fontSize: SIZES.h4 }}>
-                Latest Videos
-              </Text>
-              <TouchableOpacity style={styles.showMoreButton} onPress={allVideoNavigateTo}>
-                <Text style={styles.showMoreText}>Show more</Text>
-                <MaterialIcons name="keyboard-arrow-right" size={24} color={theme === "light" ? COLORS.white : DarkBgColors.bgGray} />
-              </TouchableOpacity>
-            </View>
-            <FlatList
-              data={videos}
-              keyExtractor={(item, index) => index?.toString()}
-              horizontal={true}
-              renderItem={({ item }) => <VideoComponent video={item} />}
-              contentContainerStyle={{ columnGap: 12 }}
-              showsHorizontalScrollIndicator={false}
-            />
-            {suggestedVideo && (
+      {isLoading ? (
+        <ActivityIndicator color={"green"} size={"large"} />
+      ) : (
+        <>
+          {userPlan?.length === 0 ? (
+            <>
               <View>
                 <Text style={{ color: theme === "light" ? COLORS.white : DarkBgColors.bgGray, fontSize: SIZES.h4 }}>
                   Suggested Video
                 </Text>
                 <SuggestVideoComp video={suggestedVideo} />
               </View>
-            )}
-          </>
-        )}
-      </>
-    )}
-  </View>
+
+            </>
+          ) : (
+            <>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                <Text style={{ color: theme === "light" ? COLORS.white : DarkBgColors.bgGray, fontSize: SIZES.h4 }}>
+                  Latest Videos
+                </Text>
+                <TouchableOpacity style={styles.showMoreButton} onPress={allVideoNavigateTo}>
+                  <Text style={styles.showMoreText}>Show more</Text>
+                  <MaterialIcons name="keyboard-arrow-right" size={24} color={theme === "light" ? COLORS.white : DarkBgColors.bgGray} />
+                </TouchableOpacity>
+              </View>
+              <FlatList
+                data={videos}
+                keyExtractor={(item, index) => index?.toString()}
+                horizontal={true}
+                renderItem={({ item }) => <VideoComponent video={item} />}
+                contentContainerStyle={{ columnGap: 12 }}
+                showsHorizontalScrollIndicator={false}
+              />
+              {suggestedVideo && (
+                <View>
+                  <Text style={{ color: theme === "light" ? COLORS.white : DarkBgColors.bgGray, fontSize: SIZES.h4 }}>
+                    Suggested Video
+                  </Text>
+                  <SuggestVideoComp video={suggestedVideo} />
+                </View>
+              )}
+            </>
+          )}
+        </>
+      )}
+    </View>
   );
 };
 
