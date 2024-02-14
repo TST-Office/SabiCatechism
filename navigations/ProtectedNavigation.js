@@ -27,7 +27,7 @@ const ProtectedNavigation = () => {
   const user = useSelector((state) => state.user);
   return (
     <Stack.Navigator
-      initialRouteName={user ? "SubscriptionSuccessPage" : "Welcome"}
+      initialRouteName={user ? "BottomTabNavigation" : "Welcome"}
     >
       <Stack.Screen
         name="BottomTabNavigation"

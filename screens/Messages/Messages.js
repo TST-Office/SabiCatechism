@@ -32,7 +32,7 @@ const Messages = () => {
     const navigateToContent = () => {
       navigation.navigate("PlayVideo", { video: item });
     };
-  
+
     return (
       <TouchableOpacity
         onPress={navigateToContent}
@@ -45,9 +45,9 @@ const Messages = () => {
           resizeMode="cover"
         >
           <View style={styles.overlay} />
-            <Text style={styles.title}>{item?.title}</Text>
-           
-        
+          <Text style={styles.title}>{item?.title}</Text>
+
+
         </ImageBackground>
       </TouchableOpacity>
     );
@@ -67,22 +67,22 @@ const Messages = () => {
       borderRadius: 12,
       overflow: "hidden",
       backgroundColor: "rgba(255, 255, 255, 0.2)",
-      height: 170, 
-      width: 170, 
+      height: 170,
+      width: 170,
       marginBottom: 1,
     },
-  
+
     overlay: {
       ...StyleSheet.absoluteFillObject,
       padding: 16,
       justifyContent: "flex-end",
     },
-  
+
     category: {
       fontSize: 14,
       color: "#fff",
     },
-  
+
     length: {
       fontSize: 14,
       color: "#fff",
@@ -105,7 +105,7 @@ const Messages = () => {
       alignItems: "center",
       textAlign: "center",
     },
-   
+
     overlay: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: "rgba(0,0,0,0.5)",
@@ -114,7 +114,7 @@ const Messages = () => {
       flexGrow: 0, // Ensure the FlatList doesn't grow indefinitely
       marginBottom: 2, // Adjust margin bottom to separate items
     },
-  
+
     container: {
       marginBottom: 50,
       justifyContent: 'center',
@@ -129,7 +129,7 @@ const Messages = () => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          marginTop: 30,
+          marginTop: 20,
           marginVertical: 10,
           marginHorizontal: 10,
         }}
@@ -150,21 +150,31 @@ const Messages = () => {
           Video History
         </Text>
       </View>
-        <View style={styles.container}>
-          {watchedVideos?.length > 0 ? (
-            // In the FlatList component, set the numColumns prop
-            <FlatList
-              data={watchedVideos}
-              keyExtractor={(item, index) => item.key || index.toString()}
-              renderItem={handleVideoSelection}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              numColumns={2}
-            />
-          ) : (
-            <Text style={styles.noResultsText}>No results found</Text>
-          )}
-        </View>
+
+
+      {/* <View>
+        <TouchableOpacity>
+          <Text>Clear History</Text>
+         
+        </TouchableOpacity>
+      </View> */}
+
+
+      <View style={styles.container}>
+        {watchedVideos?.length > 0 ? (
+          // In the FlatList component, set the numColumns prop
+          <FlatList
+            data={watchedVideos}
+            keyExtractor={(item, index) => item.key || index.toString()}
+            renderItem={handleVideoSelection}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            numColumns={2}
+          />
+        ) : (
+          <Text style={styles.noResultsText}>No results found</Text>
+        )}
+      </View>
     </Container>
   );
 };

@@ -98,7 +98,7 @@ const PaySubscription = ({ navigation }) => {
                     marginHorizontal: 12,
                     flexDirection: "row",
                     justifyContent: "center",
-                    marginTop: 30
+                    marginTop: 20
                 }}
             >
                 <TouchableOpacity

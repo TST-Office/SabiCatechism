@@ -29,6 +29,7 @@ const SubscriptionSuccessPage = ({ navigation }) => {
       <Text style={{ color: theme === "light" ? LightBgColors.primary : DarkBgColors.bgGray, textAlign: 'center', fontSize: 20, marginTop: 20, lineHeight: 30 }}>Your subscription was successfully processed, enjoy the wonderful experience.</Text>
 
       <TouchableOpacity onPress={handleLogout} style={{ backgroundColor: theme === "light" ? "#fcfcfc" : DarkBgColors.background, marginTop: 20, borderRadius: 15 }}>
+        
         <Text style={{ fontSize: 20, padding: 10, color: theme === "light" ? "#c1c1c1" : LightBgColors.primary, }}>Continue</Text>
       </TouchableOpacity>
     </Container>
