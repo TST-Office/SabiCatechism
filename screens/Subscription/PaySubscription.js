@@ -46,22 +46,35 @@ const PaySubscription = ({ navigation }) => {
 
     const route = useRoute();
     const { subscription } = route.params;
-    const [amount, setAmount] = useState('');
-    const [durationName, setDurationName] = useState('');
-    const [durationInNumber, setDurationInNumber] = useState('');
-    const [id, setId] = useState('');
-    const [name, setName] = useState('');
-    const [email, SetEmail] = useState(user.user.email)
-    const [userId, setUserId] = useState(user.user.id)
+
+
+    const [subscriptionDetails, setSubscriptionDetails] = useState({
+        amount: "",
+        durationName: "",
+        durationInNumber: "",
+        id: "",
+        name: "",
+        email: user.user.email,
+        userId: user.user.id,
+    });
 
     useEffect(() => {
         if (subscription) {
-            const { id, name, duration_in_name, amount, duration_in_number } = subscription
-            setId(id)
-            setName(name)
-            setDurationName(duration_in_name)
-            setAmount(amount)
-            setDurationInNumber(duration_in_number)
+            const {
+                id,
+                name,
+                duration_in_name,
+                amount,
+                duration_in_number,
+            } = subscription;
+            setSubscriptionDetails((prevState) => ({
+                ...prevState,
+                amount,
+                durationName: duration_in_name,
+                durationInNumber: duration_in_number,
+                id,
+                name,
+            }));
         }
     }, [subscription]);
 
@@ -80,17 +93,69 @@ const PaySubscription = ({ navigation }) => {
             </View>
         );
     };
+
     const handleCancel = () => {
-        // Display error toast for cancelled transaction
         Toast.show("Transaction Cancelled!", {
             duration: Toast.durations.LONG,
-            backgroundColor: "red", // Error color
+            backgroundColor: "red",
             shadow: true,
             animation: true,
             hideOnPress: true,
             position: Toast.positions.BOTTOM,
         });
     };
+
+    const handleSuccess = (res) => {
+        const {
+            amount,
+            durationInNumber,
+            id,
+            userId,
+        } = subscriptionDetails;
+
+        axios
+            .post(`${API_URL}/payment`, {
+                userId: parseInt(userId),
+                paymentPlanId: parseInt(id),
+                duration: parseFloat(durationInNumber),
+                transactionReference: res.data.transactionRef.reference,
+                amount,
+                payment_type: "Online Payment with Paystack",
+            })
+            .then((response) => {
+                console.log("Payment API response:", response.data);
+                if (response.data.status === true) {
+                    // Handle successful payment
+                    Toast.show("Transaction Approved!", {
+                        duration: Toast.durations.LONG,
+                    });
+                    navigation.navigate("SubscriptionSuccessPage");
+                } else {
+                    // Handle failed payment
+                    Toast.show(response.data.message, {
+                        duration: Toast.durations.LONG,
+                        backgroundColor: "red",
+                        shadow: true,
+                        animation: true,
+                        hideOnPress: true,
+                        position: Toast.positions.BOTTOM,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error("Error from payment API:", error);
+                // Handle API request error
+                Toast.show("Error processing payment. Please try again later.", {
+                    duration: Toast.durations.LONG,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                    position: Toast.positions.BOTTOM,
+                });
+            });
+    };
+
     return (
         <Container>
             <LogoManager />
@@ -124,80 +189,13 @@ const PaySubscription = ({ navigation }) => {
                 <View style={{ flex: 1 }}>
                     <Paystack
                         paystackKey={PAYSTACK_SDK}
-                        billingEmail={email}
-                        amount={amount}
+                        billingEmail={subscriptionDetails.email}
+                        amount={subscriptionDetails.amount}
                         channels={["card", "bank", "ussd", "qr", "mobile_money"]}
                         onCancel={handleCancel}
-
-                        onSuccess={(res) => {
-                            // handle response here
-                            console.log("PAYSTACK SUCCESS RES: ", res.data)
-
-                            axios.post(`${API_URL}/payment`, {
-                                userId: parseInt(userId),
-                                paymentPlanId: parseInt(id),
-                                duration: parseFloat(durationInNumber),
-                                transactionReference: res.data.transactionRef.reference,
-                                amount: amount,
-                                payment_type: "Online Payment with Paystack",
-                            }).then((response) => {
-                                console.log("Payment API response:", response.data);
-                                if (response.data.status === true) {
-                                    const userData = {
-                                        id: response.data.username.id,
-                                        userDetails: response.data,
-                                        user: response.data.username
-                                    };
-                                    // persist the user details
-                                
-                                    // Toast.show("Transaction Approved!!", {
-                                    //     duration: Toast.durations.LONG,
-                                    // });
-                                    // dispatch(setUser(userData));
-                                    
-                                    // dispatch(logoutAction());
-                                    navigation.navigate('SubscriptionSuccessPage');
-                                } else {
-                                    // Display error toast for failed transaction 
-                                    Toast.show(response.data.message, {
-                                        duration: Toast.durations.LONG,
-                                        backgroundColor: "red", // Error color
-                                        shadow: true,
-                                        animation: true,
-                                        hideOnPress: true,
-                                        position: Toast.positions.BOTTOM,
-                                    });
-                                }
-                                if (res.data.status == false) {
-                                    // Display error toast for failed transaction 
-                                    Toast.show(res.data.message, {
-                                        duration: Toast.durations.LONG,
-                                        backgroundColor: "red", // Error color
-                                        shadow: true,
-                                        animation: true,
-                                        hideOnPress: true,
-                                        position: Toast.positions.BOTTOM,
-                                    });
-                                }
-
-                            }).catch((error) => {
-                                console.error("Error from payment API:", error);
-                                // Display error toast for failed transaction 
-                                Toast.show("Error processing payment. Please try again later.", {
-                                    duration: Toast.durations.LONG,
-                                    backgroundColor: "red", // Error color
-                                    shadow: true,
-                                    animation: true,
-                                    hideOnPress: true,
-                                    position: Toast.positions.BOTTOM,
-                                });
-                            })
-
-                        }}
+                        onSuccess={handleSuccess}
                         ref={paystackWebViewRef}
                     />
-
-
                 </View>
 
                 <View style={styles.main}>
