@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./slices/store";
@@ -32,11 +32,33 @@ export default function App() {
   });
 
   // temporal fix for now
-LogBox.ignoreLogs(['new NativeEventEmitter']); 
+  LogBox.ignoreLogs(['new NativeEventEmitter']);
 
-  const onLayoutRootView = useCallback(async () => {
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
+
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(async () => {
+  //     await SplashScreen.hideAsync();
+  //   }, 5000); // 5 seconds delay
+
+  //   return () => clearTimeout(timeoutId);
+  // }, []);
+  useEffect(() => {
+    const loadFontsAndHideSplash = async () => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 5000)); // 5 seconds delay
+        await SplashScreen.hideAsync();
+      } catch (e) {
+        console.warn(e);
+      }
+    };
+
     if (fontsLoaded) {
-      await SplashScreen.hideAsync();
+      loadFontsAndHideSplash();
     }
   }, [fontsLoaded]);
 
@@ -48,7 +70,7 @@ LogBox.ignoreLogs(['new NativeEventEmitter']);
       <PersistGate loading={null} persistor={persistor}>
         <RootSiblingParent>
           <ThemeProvider>
-            <NavigationContainer onReady={onLayoutRootView}>
+            <NavigationContainer>
               <ProtectedNavigation />
             </NavigationContainer>
           </ThemeProvider>

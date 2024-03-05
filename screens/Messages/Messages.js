@@ -15,6 +15,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 
 import { useNavigation } from "@react-navigation/native";
+import LogoManager from "../../components/LogoManager";
 
 const Messages = () => {
   const watchedVideos = useSelector((state) => state.watchedVideos);
@@ -124,6 +125,7 @@ const Messages = () => {
 
   return (
     <Container>
+      <LogoManager />
       <View
         style={{
           flexDirection: "row",

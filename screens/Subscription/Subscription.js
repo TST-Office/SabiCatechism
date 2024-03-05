@@ -13,6 +13,7 @@ import FormSuccess from "../../components/FormSuccess";
 // import { API_URL } from "../../constants";
 import { setInvestmentPackage } from '../../slices/investmentPackageSlice';
 import { API_URL, SIZES } from "../../constants";
+import LogoManager from '../../components/LogoManager';
 
 
 const Subscription = ({ navigation }) => {
@@ -76,6 +77,7 @@ const Subscription = ({ navigation }) => {
     const dispatch = useDispatch();
     return (
         <Container>
+            <LogoManager />
         <View style={{ marginTop: 30 }}>
             <TouchableOpacity
                 onPress={() => navigation.goBack()}

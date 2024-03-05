@@ -19,6 +19,7 @@ import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { API_URL, COLORS, SIZES } from "../../constants";
 
 import { setBlogPosts } from "../../slices/blogSlice";
+import LogoManager from "../../components/LogoManager";
 
 export default function AllBlog() {
   const navigation = useNavigation();
@@ -103,6 +104,7 @@ export default function AllBlog() {
   });
   return (
     <Container>
+      <LogoManager />
       <View
         style={{
           flexDirection: "row",

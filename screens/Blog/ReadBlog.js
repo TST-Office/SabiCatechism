@@ -7,6 +7,7 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
+  Platform
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
@@ -21,6 +22,7 @@ import {
 } from "../../constants/theme";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import Container from "../../components/Container";
+import LogoManager from "../../components/LogoManager";
 
 const ReadBlog = () => {
   const navigation = useNavigation();
@@ -78,6 +80,7 @@ const ReadBlog = () => {
   });
   return (
     <Container>
+      <LogoManager />
       <View
         style={{
           flexDirection: "row",

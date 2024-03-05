@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import ThemeToggleButton from "../../components/ThemeToggleButton";
 import { logout as logoutAction } from "../../slices/userSlice";
+import LogoManager from "../../components/LogoManager";
 
 const Settings = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -132,6 +133,8 @@ const Settings = ({ navigation }) => {
 
   return (
     <Container>
+        <LogoManager />
+
       <View
         style={{
           marginTop: 20,

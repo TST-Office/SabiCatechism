@@ -23,6 +23,7 @@ import FormSuccess from "../../components/FormSuccess";
 import { API_URL } from "../../constants";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { setUser, logout } from "../../slices/userSlice";
+import LogoManager from "../../components/LogoManager";
 
 
 
@@ -196,6 +197,7 @@ const EditProfile = ({ navigation }) => {
         paddingHorizontal: 22,
       }}
     >
+      <LogoManager />
       <View
         style={{
           marginHorizontal: 12,

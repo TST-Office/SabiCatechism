@@ -20,6 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { useVideosSelector } from "../../components/videosSelector";
 import { addWatchedVideo } from "../../slices/watchedVideosSlice";
+import LogoManager from "../../components/LogoManager";
 
 
 // Separate VideoPlayer component
@@ -239,6 +240,7 @@ export default function PlayVideo() {
 
   return (
     <Container>
+      <LogoManager />
       <View
         style={{
           flexDirection: "row",

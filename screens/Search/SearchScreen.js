@@ -22,6 +22,7 @@ import {
   COLORS,
 } from "../../constants/theme";
 import { setBlogPosts } from "../../slices/blogSlice";
+import LogoManager from "../../components/LogoManager";
 
 const SearchScreen = () => {
   const navigation = useNavigation();
@@ -178,6 +179,7 @@ const SearchScreen = () => {
 
   return (
     <Container>
+      <LogoManager />
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{

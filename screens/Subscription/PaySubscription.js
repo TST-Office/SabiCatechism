@@ -21,6 +21,7 @@ import { PAYSTACK_SDK } from "../../constants/api";
 import { setUser } from "../../slices/userSlice";
 import axios from "axios";
 import { logout as logoutAction } from "../../slices/userSlice";
+import LogoManager from "../../components/LogoManager";
 
 
 
@@ -92,6 +93,7 @@ const PaySubscription = ({ navigation }) => {
     };
     return (
         <Container>
+            <LogoManager />
             <View
                 style={{
                     marginTop: 20,

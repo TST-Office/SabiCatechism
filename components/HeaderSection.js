@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { DarkBgColors, LightBgColors } from "../constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import SearchSection from "./SearchSection";
+import Logo from './../assets/logo.png'
+import LogoManager from "./LogoManager";
 
 const HeaderSection = (props) => {
   // Access the current theme from the Redux store
@@ -14,6 +16,8 @@ const HeaderSection = (props) => {
   // console.log("check if user details was persisted with user details", user.userDetails);
   // console.log("check if user details was persisted with user", user.user.created_at);
   return (
+    <View>
+
     <View
       style={[
         styles.header,
@@ -25,6 +29,7 @@ const HeaderSection = (props) => {
         },
       ]}
     >
+      
       <View>
         <Text
           style={{
@@ -34,25 +39,27 @@ const HeaderSection = (props) => {
             textTransform: "capitalize"
           }}
         >
-         Welcome 
-        <Text
-         style={{
-            fontSize: FONTS.body4.fontSize,
-            fontFamily: FONTS.body4.fontFamily,
-            color: theme === "light" ? DarkBgColors.text : LightBgColors.text,
-            textTransform: "capitalize"
-          }}
-        > {user.user.username}</Text>
+          Welcome
+          <Text
+            style={{
+              fontSize: FONTS.body4.fontSize,
+              fontFamily: FONTS.body4.fontFamily,
+              color: theme === "light" ? DarkBgColors.text : LightBgColors.text,
+              textTransform: "capitalize"
+            }}
+          > {user.user.username}</Text>
         </Text>
       </View>
       <View>
-      
-      <View>
-      {/* search section component called here .. */}
-        <SearchSection />
+
+        <View>
+          {/* search section component called here .. */}
+          <SearchSection />
+        </View>
+
       </View>
-      
-      </View>
+    </View>
+    <LogoManager />
     </View>
   );
 };
@@ -65,8 +72,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal:12,
-    paddingTop:10
+    paddingHorizontal: 12,
+    paddingTop: 10
   },
   profileImage: {
     height: 50,
