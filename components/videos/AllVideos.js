@@ -7,6 +7,7 @@ import {
   FlatList,
   ImageBackground,
   ActivityIndicator,
+  Platform
 } from "react-native";
 import Container from "../../components/Container";
 import { useSelector } from "react-redux";
@@ -15,6 +16,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useVideosSelector } from "../../components/videosSelector";
 import { DarkBgColors, LightBgColors } from "../../constants/theme";
 import { API_URL, COLORS, SIZES } from "../../constants";
+import LogoManager from "../LogoManager";
 
 const AllVideos = () => {
   const theme = useSelector((state) => state.theme);
@@ -100,6 +102,7 @@ const AllVideos = () => {
 
   return (
     <Container>
+      <LogoManager />
       <View
         style={{
           flexDirection: "row",

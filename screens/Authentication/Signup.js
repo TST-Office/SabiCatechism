@@ -156,52 +156,39 @@ const Signup = ({ navigation }) => {
 
 
 
-    const registerUser = () => {
-        setIsLoading(true);
-        axios
-            .post(`${API_URL}/register`, {
+    const registerUser = async () => {
+        try {
+            setIsLoading(true);
+            const response = await axios.post(`${API_URL}/register`, {
                 username: username,
                 name: name,
                 email: email,
                 password: password,
                 devicename: Device.modelName,
-            })
-            .then((response) => {
-                console.log("request sent", response.data);
-                if (response.data.status === true) {
-                    setIsLoading(false)
-                    setSuccessMessage("Signup successful")
-                    setUsername("")
-                    setName("")
-                    setEmail("")
-                    setPassword("")
-                    setConfirmPassword("")
-                    console.log("Registration successful: ", response.data.user);
-
-                    // set user details fetched from the api
-                    //   const userData = {
-                    //     id: response.data.username.id,
-                    //     userDetails: response.data,
-                    //     user: response.data.username
-                    //   }
-                    //   // persist the user details
-                    //   dispatch(setUser(userData))
-
-                }
-                if (response.data.status === false) {
-                    setIsLoading(false);
-                    setErrMessage(response.data.message);
-                    return setDisplayModalErr(true);
-                }
-            })
-            .catch((error) => {
-                setIsLoading(false);
-                setErrMessage(error.message);
-                return setDisplayModalErr(true);
-                console.log("registration error code: ", error.message);
             });
-    };
 
+            console.log("request sent", response.data);
+            setIsLoading(false);
+
+            if (response.data.status === true) {
+                setSuccessMessage("Signup successful");
+                setUsername("");
+                setName("");
+                setEmail("");
+                setPassword("");
+                setConfirmPassword("");
+                console.log("Registration successful: ", response.data.user);
+            } else {
+                setErrMessage(response.data.message);
+                setDisplayModalErr(true);
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setErrMessage(error.message);
+            setDisplayModalErr(true);
+            console.log("registration error code: ", error.message);
+        }
+    };
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>

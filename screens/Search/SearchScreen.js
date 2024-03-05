@@ -9,6 +9,7 @@ import {
   FlatList,
   ImageBackground,
   ActivityIndicator,
+  Platform
 } from "react-native";
 import Container from "../../components/Container";
 import { useSelector } from "react-redux";
